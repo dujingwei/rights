@@ -5,9 +5,7 @@
 }
 @using Common
 @using Models
- @section CurentPlace {
-    修改  
-}
+ 
 
     <fieldset>
         <legend>
@@ -49,7 +47,7 @@
                 @Html.LabelFor(model => model.Ip)：
             </div>
             <div class="editor-field">
-                @Html.EditorFor(model => model.Ip)
+                @Html.TextBoxFor(model => model.Ip)
                 @Html.ValidationMessageFor(model => model.Ip)
             </div>
             <br style="clear: both;" />

@@ -1,80 +1,72 @@
-﻿ 
-<!DOCTYPE html>
-<html>
-<head id="MyHead">
-    <link id="easyuiTheme" href="@Url.Content("~/Res/easyui/themes/default/easyui.css")" rel="stylesheet" type="text/css" />
-    <title></title>
-    @Styles.Render("~/Content/css")
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/easyui")
-    <style type="text/css">
-        .combo {
-            font-family: 微软雅黑,新宋体;
-            height: 24px;
-            width: 210px;
-            border: 1px solid #CCC;
-        }
-    </style>
-    @RenderSection("HeadContent", false)
+﻿<div class="portlet light bordered">
+    @RenderBody()
+</div>
+<!-- 验证 -->
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
 
-    <script type='text/javascript'>
-        function ajaxFrom(form, url) {
 
-            $.ajax({
-                url: url,
-                type: "Post",
-                data: $(form).serialize(),
-                dataType: "json",
-                success: function (data) {
+<script type='text/javascript'>
 
-                    if ($.messager) {
-                        $.messager.defaults.ok = '继续';
-                        $.messager.defaults.cancel = '返回';
+    $(function () {
 
-                        $.messager.confirm('操作提示', data, function (r) {
-                            if (!r) {
-                                window.location.href = 'javascript:history.go(-1)';
+        $("form").submit(function (form) {
+
+            if (form.result) {
+             
+                $.ajax({
+                    url: this.action,
+                    type: "Post",
+                    data: $(this).serialize(),
+                    dataType: "json",
+                    success: function (data) {
+
+                        $.confirm({
+                            title: '操作提示',
+                            content: data,
+                            buttons: {
+                                ok: {
+                                    text: "继续!",
+                                    btnClass: 'btn-primary',
+                                    keys: ['enter'],
+                                    action: function () {
+                                        console.log('the user clicked confirm');
+                                    }
+                                },
+                                cancel: {
+                                    text: "返回!",
+                                    btnClass: 'btn',
+
+                                    action: function () {
+                                        console.log('s');
+                                    }
+                                }
                             }
                         });
+
+                        if (data.code == 1) {
+                            $.alert({
+                                title: '操作提示',
+                                content: data,
+                                confirmButton: '确定',
+                                backgroundDismiss: false,
+                                autoClose: 'confirm|2000',
+                                confirm: function () {
+                                    alert(2);
+                                 //   ShowInfo(data.newid, '');
+                                }
+                            });
+                        }
+                        else {
+
+                        }
+
                     }
-
-                }
-            });
-        }
-
-
-        $(function () {
-            $('.easyui-combobox').combobox({
-                width: 243,
-                onSelect: function (record) {
-                    var strs = record.text.split("—");
-                    $(this).combobox('setValue', strs[0]);
-                }
-            });
-            $("form").submit(function (form) {
-                if (form.result) {
-                    @RenderSection("CurentPlaceJS", false)
-                    ajaxFrom(this, this.action);
-                }
-                return false;
-            });
-            //按钮样式
-            $('.a2').mouseover(function () { this.style.color = "#ae1121"; }).mouseout(function () { this.style.color = "#333"; });
-
+                });
+            }
+            return false;
         });
-    </script>
-</head>
-<body>
-    <div class="mbx">
-        @RenderSection("CurentPlace", false)
-    </div>
-    @using (Html.BeginForm())
-    {
 
-        @Html.ValidationSummary(true)
-        @RenderBody()
+    });
+</script>
 
-    }
-   
-</body>
-</html>
