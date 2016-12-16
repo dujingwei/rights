@@ -68,7 +68,7 @@ namespace Models
             StringBuilder str = new StringBuilder();
             foreach (SelectListItem item in selectList)
             {
-                str.Append("<input ");
+                str.Append("<label class='radio-inline'><input ");
                 if (item.Value == defaultValue)
                 {
                     str.Append("checked='checked' ");
@@ -86,11 +86,20 @@ namespace Models
                     
                 }
                
-                str.Append("\" id=\"" + item.Value + "\" type=\"radio\"  value=\"" + item.Value + "\" name=\"" + name + "\"/>");
+                str.Append(" id=\"" + name + "\" type=\"radio\"  value=\"" + item.Value + "\" name=\"" + name + "\"/>");
                 str.Append(item.Text);
-
+                str.Append("</label>");
             }
-
+            /*
+               <label class="radio-inline">
+                                <input name="optionsRadios2" value="option1" type="radio">
+                                Free
+                            </label>
+                            <label class="radio-inline">
+                                <input name="optionsRadios2" value="option2" checked="" type="radio">
+                                Professional
+                            </label>
+                            */
 
             return MvcHtmlString.Create(str.ToString());
         }

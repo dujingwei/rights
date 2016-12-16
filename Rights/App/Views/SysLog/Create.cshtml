@@ -1,86 +1,146 @@
 ﻿@model Langben.DAL.SysLog
-
 @{
     Layout = "~/Views/Shared/Create.cshtml";
 }
 @using Common
 @using Models
- 
-@section CurentPlace {
- 
-      创建  
- 
- }
-    <fieldset>
-        <legend>
-            <input class="a2 f2" type="submit" value="创建" />
-            <input class="a2 f2" type="button" onclick="BackList('SysLog')" value="返回" />
-        </legend>
-        <div class="bigdiv">
-                 
-            <div class="editor-label">
-                @Html.LabelFor(model => model.PersonId)：
+<div class="portlet-title">
+    <div class="caption">
+        <i class="icon-equalizer font-red-sunglo"></i>
+        <span class="caption-subject font-red-sunglo bold uppercase">日志管理</span>
+        <span class="caption-helper">一定要加油哦，我是来说明的。</span>
+    </div>
+</div>
+<div class="portlet-body form">
+    <!-- BEGIN FORM-->
+    <form action="/SysLog/Create" class="form-horizontal">
+        <div class="form-body">
+            <h3 class="form-section">基本信息</h3>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Result, new { @class = "control-label col-md-4" })
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(model => model.Result, new { @class = "form-control", placeholder = Html.DisplayNameFor(model => model.Result) })
+                            @Html.ValidationMessageFor(model => model.Result)
+                            <span class="help-block">
+
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="control-label col-md-4">洒家分厘卡机</label>
+                        <div class="col-md-8">
+                            <input class="form-control" placeholder="Chee Kin" type="text">
+                            <span class="help-block">
+                                This is inline help
+                            </span>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="editor-field">
-                @Html.EditorFor(model => model.PersonId)
-                @Html.ValidationMessageFor(model => model.PersonId)
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Message, new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.TextAreaFor(model => model.Message, new { @class = "form-control", placeholder = Html.DisplayNameFor(model => model.Message) })
+                            @Html.ValidationMessageFor(model => model.Message)
+                            <span class="help-block">
+
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
             </div>
-            <br style="clear: both;" />
-            <div class="editor-label">
-                @Html.LabelFor(model => model.Message)：
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="control-label col-md-4">Gender</label>
+                        <div class="col-md-8">
+                            @Html.DropDownListFor(model => model.State, Models.SysFieldModels.GetSysField("SysLog", "State"), "请选择", new { @class = "form-control" })
+
+
+                            <span class="help-block">
+                                Select your gender.
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <!--/span-->
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="control-label col-md-4">Date of Birth</label>
+                        <div class="col-md-8">
+                            <input class="form-control" type="text" value="" id="datetimepicker" name="datetimepicker">
+                            <script type="text/javascript">
+                                $('#datetimepicker').datetimepicker({
+                                    minView: "month", //选择日期后，不会再跳转去选择时分秒
+                                    language: 'zh-CN',
+                                    format: 'yyyy-mm-dd',
+                                    todayBtn: 1,
+                                    autoclose: 1,
+                                });
+                            </script>         
+                        </div>
+                    </div>
+                </div>
+                <!--/span-->
             </div>
-            <div class="textarea-box">
-                @Html.TextAreaFor(model => model.Message) 
-                @Html.ValidationMessageFor(model => model.Message) 
-            </div>     
-            <div class="editor-label">
-                @Html.LabelFor(model => model.Result)：
+            <!--/row-->
+
+            <h3 class="form-section">Address</h3>
+          
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="control-label col-md-4">状态</label>
+                        <div class="col-md-8">
+                            @Html.RadioButtonListFor(model => model.State, Models.SysFieldModels.GetSysField("SysPerson", "State"), false)
+                        </div>
+                    </div>
+                </div>
+             
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="control-label col-md-4">State</label>
+                        <div class="col-md-8">
+                            <input class="form-control" type="text">
+                        </div>
+                    </div>
+                </div>
+                
             </div>
-            <div class="editor-field">
-                @Html.EditorFor(model => model.Result)
-                @Html.ValidationMessageFor(model => model.Result)
-            </div>     
-            <div class="editor-label">
-                @Html.LabelFor(model => model.MenuId)：
-            </div>
-            <div class="editor-field">
-                @Html.EditorFor(model => model.MenuId)
-                @Html.ValidationMessageFor(model => model.MenuId)
-            </div>     
-            <div class="editor-label">
-                @Html.LabelFor(model => model.Ip)：
-            </div>
-            <div class="editor-field">
-                @Html.EditorFor(model => model.Ip)
-                @Html.ValidationMessageFor(model => model.Ip)
-            </div>
-            <br style="clear: both;" />
-            <div class="editor-label">
-                @Html.LabelFor(model => model.Remark)：
-            </div>
-            <div class="textarea-box">
-                @Html.TextAreaFor(model => model.Remark) 
-                @Html.ValidationMessageFor(model => model.Remark) 
-            </div>        
-            <div class="editor-label">
-                @Html.LabelFor(model => model.State)：
-            </div>
-            <div class="editor-field">
-                @Html.DropDownListFor(model => model.State,Models.SysFieldModels.GetSysField("SysLog","State"),"请选择")
+            
+        </div>
+        <div class="form-actions">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-md-offset-3 col-md-9">
+                            <button type="submit" class="btn btn-primary">保存</button>
+                            <button type="button" class="btn default"  onclick="BackList('SysLog')" >返回</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                </div>
             </div>
         </div>
-    </fieldset>
- 
+    </form>
+    <!-- END FORM-->
+</div>
+<script type="text/javascript">
 
-    
-    <script type="text/javascript">
+    $(function () {
 
-        $(function () {
-            
 
-        });
-              
+    });
 
-    </script>
+
+</script>
 
 

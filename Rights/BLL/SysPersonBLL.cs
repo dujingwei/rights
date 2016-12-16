@@ -93,14 +93,7 @@ namespace Langben.BLL
                             }                         
                         } 
  
-                        if (item.SysDocument != null)
-                        {
-                            item.SysDocumentId = string.Empty;
-                            foreach (var it in item.SysDocument)
-                            {
-                                item.SysDocumentId += it.Name + ' ';
-                            }                         
-                        } 
+                        
 
                     }
  
@@ -143,14 +136,7 @@ namespace Langben.BLL
                 count++;
             }
 
-            foreach (string item in entity.SysDocumentId.GetIdSort())
-            {
-                SysDocument sys = new SysDocument { Id = item };
-                db.SysDocument.Attach(sys);
-                entity.SysDocument.Add(sys);
-                count++;
-            }
-
+         
             repository.Create(db, entity);
             if (count == repository.Save(db))
             {
@@ -374,17 +360,7 @@ namespace Langben.BLL
             List<string> addSysDocumentId = new List<string>();
             List<string> deleteSysDocumentId = new List<string>();
             DataOfDiffrent.GetDiffrent(entity.SysDocumentId.GetIdSort(), entity.SysDocumentIdOld.GetIdSort(), ref addSysDocumentId, ref deleteSysDocumentId);
-            List<SysDocument> listEntitySysDocument = new List<SysDocument>();
-            if (deleteSysDocumentId != null && deleteSysDocumentId.Count() > 0)
-            {                
-                foreach (var item in deleteSysDocumentId)
-                {
-                    SysDocument sys = new SysDocument { Id = item };
-                    listEntitySysDocument.Add(sys);
-                    entity.SysDocument.Add(sys);
-                }                
-            } 
-
+           
             SysPerson editEntity = repository.Edit(db, entity);
             
          
@@ -408,25 +384,6 @@ namespace Langben.BLL
             } 
 
          
-            if (addSysDocumentId != null && addSysDocumentId.Count() > 0)
-            {
-                foreach (var item in addSysDocumentId)
-                {
-                    SysDocument sys = new SysDocument { Id = item };
-                    db.SysDocument.Attach(sys);
-                    editEntity.SysDocument.Add(sys);
-                    count++;
-                }
-            }
-            if (deleteSysDocumentId != null && deleteSysDocumentId.Count() > 0)
-            { 
-                foreach (SysDocument item in listEntitySysDocument)
-                {
-                    editEntity.SysDocument.Remove(item);
-                    count++;
-                }
-            } 
-
             if (count == repository.Save(db))
             {
                 return true;
@@ -501,25 +458,7 @@ namespace Langben.BLL
             return repository.GetRefSysRole(db).ToList();
         }
 
-        /// <summary>
-        /// 获取在该表一条数据中，出现的所有外键实体
-        /// </summary>
-        /// <param name="id">主键</param>
-        /// <returns>外键实体集合</returns>
-        public List<SysDocument> GetRefSysDocument(string id)
-        { 
-            return repository.GetRefSysDocument(db, id).ToList();
-        }
-        /// <summary>
-        /// 获取在该表中出现的所有外键实体
-        /// </summary>
-        /// <param name="id">主键</param>
-        /// <returns>外键实体集合</returns>
-        public List<SysDocument> GetRefSysDocument()
-        { 
-            return repository.GetRefSysDocument(db).ToList();
-        }
-
+   
         
         /// <summary>
         /// 根据SysDepartmentIdId，获取所有人员数据

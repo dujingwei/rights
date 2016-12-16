@@ -15,7 +15,10 @@ namespace Langben.App.Controllers
     {
         //
         // GET: /Home/
-
+        public ActionResult Index2()
+        {
+            return View();
+        }
         public ActionResult Index()
         {
             Account account = GetCurrentAccount();
@@ -28,6 +31,7 @@ namespace Langben.App.Controllers
 
                 //IHomeBLL home = new HomeBLL();
                 ViewData["Menu"] = App.Codes.MenuCaching.GetMenu(ref account); //home.GetMenuByAccount(ref account);// 获取菜单
+                var dnids = ViewData["Menu"].ToString();
                 Utils.WriteCookie("account", account, 7);
             }
 

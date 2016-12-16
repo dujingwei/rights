@@ -16,7 +16,6 @@ namespace Langben.DAL
     {
         public SysPerson()
         {
-            this.SysDocument = new HashSet<SysDocument>();
             this.SysRole = new HashSet<SysRole>();
         }
     
@@ -51,7 +50,6 @@ namespace Langben.DAL
         public string HDpic { get; set; }
     
         public virtual SysDepartment SysDepartment { get; set; }
-        public virtual ICollection<SysDocument> SysDocument { get; set; }
         public virtual ICollection<SysRole> SysRole { get; set; }
     }
 }

@@ -18,7 +18,6 @@ namespace Langben.DAL
         {
             this.SysDepartment1 = new HashSet<SysDepartment>();
             this.SysPerson = new HashSet<SysPerson>();
-            this.SysDocument = new HashSet<SysDocument>();
         }
     
         public string Id { get; set; }
@@ -35,6 +34,5 @@ namespace Langben.DAL
         public virtual ICollection<SysDepartment> SysDepartment1 { get; set; }
         public virtual SysDepartment SysDepartment2 { get; set; }
         public virtual ICollection<SysPerson> SysPerson { get; set; }
-        public virtual ICollection<SysDocument> SysDocument { get; set; }
     }
 }

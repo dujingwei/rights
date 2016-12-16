@@ -46,14 +46,7 @@ namespace Langben.IBLL
         /// <returns></returns>
         [OperationContract]
         System.Collections.Generic.List<SysDepartment> GetAll();
-        /// <summary>
-        /// 获取在该表中出现的所有外键实体
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        List<SysDocument> GetRefSysDocument();
-        
-        
+      
         /// <summary>
         /// 根据主键，查看详细信息
         /// </summary>

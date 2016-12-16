@@ -1,212 +1,105 @@
 ﻿
-@model Langben.DAL.SysLog 
-@{ Layout = "~/Views/Shared/Index.cshtml"; }
-@using Common 
+@model Langben.DAL.SysLog
+
+@using Common
 @using Models
-<div id="divQuery">
-     
-            <div class="input_search">
-            <div class="input_search-label">
-                    @Html.LabelFor(model => model.Message):
-             </div>
-                <div class="input_search-field">
-                    <input type='text' id='Message'/>
-               </div>
-            </div> 
-             
-            <div class='input_search'>
-              <div class='input_search-label'>
-                    @Html.LabelFor(model => model.CreateTime):
+
+<style>
+    .red {
+        color: #dd5a43 !important;
+    }
+
+    .green {
+        color: #69aa46 !important;
+    }
+
+    .bigger-130 {
+        font-size: 130% !important;
+    }
+
+    .action-buttons a {
+        margin: 0 7px;
+        display: inline-block;
+        opacity: 0.85;
+        -webkit-transition: all 0.1s;
+        -o-transition: all 0.1s;
+        transition: all 0.1s;
+    }
+
+        .action-buttons a:hover {
+            text-decoration: none;
+            opacity: 1;
+            -moz-transform: scale(1.2);
+            -webkit-transform: scale(1.2);
+            -o-transform: scale(1.2);
+            -ms-transform: scale(1.2);
+            transform: scale(1.2);
+        }
+</style>
+<div id="divQuery" class="form-horizontal">
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <label class="control-label col-md-4">我的创建时间</label>
+                <div class="col-md-8">
+                    <input class="form-control" type="text" placeholder="Chee Kin">
+
                 </div>
-                <div class='input_search-field-time'>
-                    <input type="text" id="CreateTimeStart_Time" onclick="WdatePicker({maxDate:'#F{$dp.$D(\'CreateTimeEnd_Time\');}'})"  />
-                    <span>到</span>
-                    <input type="text" id="CreateTimeEnd_Time" onclick="WdatePicker({minDate:'#F{$dp.$D(\'CreateTimeStart_Time\');}'})" />
-               </div>
             </div>
-    <div class='input_search' style="padding-top:10px;">
-        <a href="#" onclick="flexiQuery()" class="easyui-linkbutton" data-options="iconCls:'icon-search'">
-            查 询
-        </a>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label class="control-label col-md-4">创建时间</label>
+                <div class="col-md-8">
+                    <input class="form-control" type="text" placeholder="Chee Kin">
+
+                </div>
+            </div>
+        </div>
+        <div class='col-md-4'>
+            <input type="hidden" id="search" name="search" />
+            <button  id="flexiQuery"  type="submit" class="btn btn-primary">查 询</button>
+            
+        </div>
     </div>
 </div>
- <br style="clear: both;" />
+<div class="row">
+    <div class="col-md-1">
+        <button onclick="langbenCreate()" class="btn default"><i class="icon-plus"></i> 创建</button>
+    </div>
+    <div class="col-md-1">
+        <button onclick="flexiQuery()" class="btn default"> <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>导出</button>
+
+
+    </div>
+    <div class="col-md-10">
+
+    </div>
+</div>
 
 <script type="text/javascript" language="javascript">
-    $(function () {
-
-        $('#flexigridData').datagrid({
-            title: '日志', //列表的标题
-            iconCls: 'icon-site',
-            width: 'auto',
-            height: 'auto',
-            //nowrap: false,
-            striped: true,
-            collapsible: true,
-            url: '../SysLog/GetData', //获取数据的url
-            sortName: 'Id',
-            sortOrder: 'desc',
-            idField: 'Id',
-
-            toolbar: [
-               {
-                    text: '导出',
-                    iconCls: 'icon-excel',
-                    handler: function () {
-                        return flexiExport();
-                    }
-                } ],
-            columns: [[
 
 
-             {
-                 field: 'Message', title: '@Html.DisplayNameFor(model => model.Message)', width: 500,
-					    formatter: function (value, row, index) {
-					        var html = "<a href='/SysLog/Details/" + row.Id + "'>" + value + "</a>";
-					        return html;
-					    }
-					}
-               
-              
-                @*,{ field: 'Remark', title:  '@Html.DisplayNameFor(model => model.Remark)', width: 97 }*@
-                //,{ field: 'State', title:  '@Html.DisplayNameFor(model => model.State)', width: 97 }
-           
-                , { field: 'CreatePerson', title: '@Html.DisplayNameFor(model => model.CreatePerson)', width: 97 }
 
-     , {
-         field: 'CreateTime', title: '@Html.DisplayNameFor(model => model.CreateTime)', width: 97
-                , formatter: function (value, rec) {
-                    if (value) {
-                        return dateConvert(value);
-                    }
-                }
-     }
-  , { field: 'Ip', title: '@Html.DisplayNameFor(model => model.Ip)', width: 97 }
 
- , { field: 'MenuId', title: '@Html.DisplayNameFor(model => model.MenuId)', width: 97 }
-
-            ]],
-            pagination: true,
-            rownumbers: true
-
-        });
-
-        var parent = window.dialogArguments; //获取父页面
-        if (parent == "undefined" || parent == null) {
-            //    不是在iframe中打开的
-        } else {
-            //隐藏所有的按钮和分隔符
-            $(".l-btn.l-btn-plain").hide();
-            $(".datagrid-btn-separator").hide();
-            //添加选择按钮
-            $('#flexigridData').datagrid("addToolbarItem", [{ "text": "选择", "iconCls": "icon-ok", handler: function () { flexiSelect(); } }]);
-        }
-    });
-
-    //“查询”按钮，弹出查询框
-    function flexiQuery() {
-
-        //将查询条件按照分隔符拼接成字符串
-        var search = "";
-        $('#divQuery').find(":text,:selected,select,textarea,:hidden,:checked,:password").each(function () {
-            if (this.id)
-                search = search + this.id + "&" + this.value + "^";
-            else
-                search = search + this.name + "&" + this.value + "^";
-        });
-        //执行查询
-        $('#flexigridData').datagrid('load', { search: search });
-    };
-    //“导出”按钮     在6.0版本中修改
-    function flexiExport() {
-
-        //将查询条件按照分隔符拼接成字符串
-        var search = "";
-        $('#divQuery').find(":text,:selected,select,textarea,:hidden,:checked,:password").each(function () {
-            search = search + this.id + "&" + this.value + "^";
-        });
-
-        var p = $('#flexigridData').datagrid('options').columns[0];
-        var field = [];//所有的列名
-        var title = [];//所有的标题名称
-        $(p).each(function () {
-            field.push(this.field);
-            title.push(this.title);
-        });
-
-        $.post("../SysLog/Export",
-            {
-                title: title.join(","),
-                field: field.join(","),
-                sortName: $('#flexigridData').datagrid('options').sortName,
-                sortOrder: $('#flexigridData').datagrid('options').sortOrder,
-                search: search
-            }, function (res) {
-                window.location.href = res;
-
-            });
-    };
-    //“选择”按钮，在其他（与此页面有关联）的页面中，此页面以弹出框的形式出现，选择页面中的数据
-    function flexiSelect() {
-
-        var rows = $('#flexigridData').datagrid('getSelections');
-        if (rows.length == 0) {
-            $.messager.alert('操作提示', '请选择数据!', 'warning');
-            return false;
-        }
-
-        var arr = [];
-        for (var i = 0; i < rows.length; i++) {
-            arr.push(rows[i].Id);
-        }
-        arr.push("^");
-        for (var i = 0; i < rows.length; i++) {
-            arr.push(rows[i].PersonId);
-        }
-        //主键列和显示列之间用 ^ 分割   每一项用 , 分割
-        if (arr.length > 0) {//一条数据和多于一条
-            returnParent(arr.join("&")); //每一项用 & 分割
-        }
-    }
-    function Detail(id)
-    {
-        window.location.href = "../SysLog/Details/" +id;
-    }
-    //导航到查看详细的按钮
-    function getView() {
-
-        var arr = $('#flexigridData').datagrid('getSelections');
-
-        if (arr.length == 1) {
-            window.location.href = "../SysLog/Details/" + arr[0].Id;
-
-        } else {
-            $.messager.alert('操作提示', '请选择一条数据!', 'warning');
-        }
-        return false;
-    }
     //导航到创建的按钮
-    function flexiCreate() {
+    function langbenCreate() {
+        $("#contentBody").load("../SysLog/Create", function () {
 
-        window.location.href = "../SysLog/Create";
+        });
         return false;
     }
     //导航到修改的按钮
-    function flexiModify() {
+    function langbenModify(id) {
+        var url = "../SysLog/Edit/" + id;
+        $("#contentBody").load(url, function () {
 
-        var arr = $('#flexigridData').datagrid('getSelections');
-
-        if (arr.length == 1) {
-            window.location.href = "../SysLog/Edit/" + arr[0].Id;
-
-        } else {
-            $.messager.alert('操作提示', '请选择一条数据!', 'warning');
-        }
+        });
         return false;
-
     };
     //删除的按钮
-    function flexiDelete() {
+    function langbenDelete(id) {
 
         var rows = $('#flexigridData').datagrid('getSelections');
         if (rows.length == 0) {
@@ -221,7 +114,7 @@
 
         $.messager.confirm('操作提示', "确认删除这 " + arr.length + " 项吗？", function (r) {
             if (r) {
-                $.post("../SysLog/Delete", { query: arr.join(",") }, function (res) {
+                $.post("../SysDocumentTalk/Delete", { query: arr.join(",") }, function (res) {
                     if (res == "OK") {
                         //移除删除的数据
 
@@ -242,6 +135,129 @@
         });
 
     };
+    $.extend($.fn.dataTable.defaults, {
+        "dom": "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-5'i><'col-sm-7'p>>",//默认是lfrtip
+        "processing": true,//加载中
+        "responsive": true,
+        "serverSide": true,//服务器模式（★★★★★重要，本文主要介绍服务器模式）
+        "searching": false,//datatables自带的搜索
 
+        "pagingType": "full_numbers",//分页模式
+        "ajax": {
+            "type": "POST",//（★★★★★重要）
+            "contentType": "application/json; charset=utf-8"
+        },
+        "language": {
+            "processing": "努力加载中...",
+            "lengthMenu": "每页显示 _MENU_ 条数据",
+            "zeroRecords": "没有匹配数据",
+            "info": "显示第 _START_ 至 _END_ 项，共 _TOTAL_ 项",
+            "infoEmpty": "努力了，但没找到数据",
+            "infoFiltered": "",
+            "infoPostFix": "",
+
+            "emptyTable": "没有匹配结果",
+            "loadingRecords": "载入中...",
+            "thousands": ",",
+            "paginate": {
+                "first": "首页",
+                "previous": "上一页",
+                "next": "下一页",
+                "last": "末页"
+            },
+            "aria": {
+                "sortAscending": ": 以升序排列此列",
+                "sortDescending": ": 以降序排列此列"
+            }
+        }
+    });
+    $(document).ready(function () {
+
+
+        var table = $('#datatab').DataTable({
+            "serverSide": true,
+            "ajax": {
+                "type": "POST",
+                "url": '/SysLog/GetData',
+                "contentType": 'application/json; charset=utf-8',
+                'data': function (data) {
+                     
+                    data.search.value = $('#search').val();
+
+                    return data = JSON.stringify(data);
+                }
+            }
+            , "columnDefs": [
+           {
+               "targets": -1,//-1表示最后一行
+               "width": "50px",
+
+               render: function (data, type, full, meta) {
+
+                   return '<div class="hidden-sm hidden-xs action-buttons"><a class="green" href="#" onclick="langbenModify('
+                       + "'" + full.Id + "'"
+                       + ')"><i class="ace-icon fa fa-pencil bigger-130"></i></a><a class="red" href="#" onclick="langbenDelete('
+                       + "'" + full.Id + "'"
+                       + ')"><i class="ace-icon fa fa-trash-o bigger-130"></i></a></div>' +
+                       '';
+               }
+           }]
+            , "processing": true,
+            "paging": true,
+            "deferRender": true,
+            "order": [[0, "desc"]],
+            "columns": [
+           { "data": "Message" },
+           { "data": "CreateTime" },
+           { "data": "Ip" }
+           ,
+           { "data": "操作" }
+            ]
+        });
+        $("#flexiQuery").click(function () {
+            //将查询条件按照分隔符拼接成字符串
+            var search = "";
+            $('#divQuery').find(":text,:selected,select,textarea,:hidden,:checked,:password").each(function () {
+                if (this.id)
+                    search = search + this.id + "&" + this.value + "^";
+                else
+                    search = search + this.name + "&" + this.value + "^";
+            });
+            //执行查询
+            $('#search').val(search)
+            
+            table.ajax.reload();
+        
+        });
+        //“查询”按钮，弹出查询框
+        function flexiQuery() {
+           
+        };
+
+
+
+    });
 </script>
+<table id="datatab" class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Message)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreateTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Ip)
+            </th>
+            <th>
+                操作
+            </th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+    <tfoot>
 
+    </tfoot>
+</table>

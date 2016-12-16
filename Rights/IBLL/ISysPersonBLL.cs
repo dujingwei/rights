@@ -52,13 +52,7 @@ namespace Langben.IBLL
         /// <param name="id"></param>
         /// <returns></returns>
         List<SysRole> GetRefSysRole();
-        /// <summary>
-        /// 获取在该表中出现的所有外键实体
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        List<SysDocument> GetRefSysDocument();
-        
+ 
         /// <summary>
         /// 根据SysDepartmentIdId，获取所有人员数据
         /// </summary>

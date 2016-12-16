@@ -28,8 +28,6 @@ namespace Langben.DAL
         public virtual DbSet<FileUploader> FileUploader { get; set; }
         public virtual DbSet<SysAnnouncement> SysAnnouncement { get; set; }
         public virtual DbSet<SysDepartment> SysDepartment { get; set; }
-        public virtual DbSet<SysDocument> SysDocument { get; set; }
-        public virtual DbSet<SysDocumentTalk> SysDocumentTalk { get; set; }
         public virtual DbSet<SysEmail> SysEmail { get; set; }
         public virtual DbSet<SysEmailTemp> SysEmailTemp { get; set; }
         public virtual DbSet<SysException> SysException { get; set; }

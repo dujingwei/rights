@@ -194,8 +194,10 @@ function dia() {
     }
 }
 function BackList(url) {
+    $("#contentBody").load(url, function () {
 
-    window.location.href = '../../' + url;
+    });
+   // window.location.href = '../../' + url;
 }
 function manyTreeChecked(node, checked, hidControl, treeId) {
     var hidArr = $('#' + hidControl).val().split(',');

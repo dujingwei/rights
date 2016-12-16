@@ -56,6 +56,7 @@
     <Compile Include="Framework\SysMenuBLL.cs" />
     <Compile Include="Framework\SysMenuSysRoleSysOperationBLL.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SysDepartmentBLL.cs" />
     <Compile Include="SysEmailBLL.cs" />
     <Compile Include="SysEmailTempBLL.cs" />
     <Compile Include="SysMessageBLL.cs" />
@@ -69,10 +70,7 @@
     <Compile Include="FileUploaderBLL.cs" />
     <Compile Include="SysOperationBLL.cs" />
     <Compile Include="SysMenuSysRoleSysOperationBLL.cs" />
-    <Compile Include="SysDepartmentBLL.cs" />
     <Compile Include="SysAnnouncementBLL.cs" />
-    <Compile Include="SysDocumentBLL.cs" />
-    <Compile Include="SysDocumentTalkBLL.cs" />
     <Compile Include="SysNoticeBLL.cs" />
   </ItemGroup>
   <ItemGroup>

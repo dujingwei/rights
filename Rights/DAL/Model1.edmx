@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="SysModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="SysModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="FileUploader">
           <Key>
             <PropertyRef Name="Id" />
@@ -45,49 +45,6 @@
           <Property Name="CreatePerson" Type="nvarchar" MaxLength="200" />
           <Property Name="UpdateTime" Type="datetime" />
           <Property Name="UpdatePerson" Type="nvarchar" MaxLength="200" />
-        </EntityType>
-        <EntityType Name="SysDocument">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="nvarchar" MaxLength="36" Nullable="false" />
-          <Property Name="Name" Type="nvarchar" MaxLength="200" />
-          <Property Name="Path" Type="nvarchar" MaxLength="200" />
-          <Property Name="FullPath" Type="varchar" MaxLength="500" />
-          <Property Name="Suffix" Type="nvarchar" MaxLength="200" />
-          <Property Name="Size" Type="int" />
-          <Property Name="Remark" Type="nvarchar" MaxLength="4000" />
-          <Property Name="Download" Type="int" />
-          <Property Name="CreateTime" Type="datetime" />
-          <Property Name="CreatePerson" Type="nvarchar" MaxLength="200" />
-        </EntityType>
-        <EntityType Name="SysDocumentSysDepartment">
-          <Key>
-            <PropertyRef Name="SysDepartmentId" />
-            <PropertyRef Name="Sys_Id" />
-          </Key>
-          <Property Name="SysDepartmentId" Type="nvarchar" MaxLength="36" Nullable="false" />
-          <Property Name="Sys_Id" Type="nvarchar" MaxLength="36" Nullable="false" />
-        </EntityType>
-        <EntityType Name="SysDocumentSysPerson">
-          <Key>
-            <PropertyRef Name="SysPersonId" />
-            <PropertyRef Name="SysSysDocumentId_Id" />
-          </Key>
-          <Property Name="SysPersonId" Type="nvarchar" MaxLength="36" Nullable="false" />
-          <Property Name="SysSysDocumentId_Id" Type="nvarchar" MaxLength="36" Nullable="false" />
-        </EntityType>
-        <EntityType Name="SysDocumentTalk">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="nvarchar" MaxLength="36" Nullable="false" />
-          <Property Name="Content" Type="nvarchar" MaxLength="500" />
-          <Property Name="SysDocumentId" Type="nvarchar" MaxLength="36" />
-          <Property Name="Bad" Type="int" />
-          <Property Name="Good" Type="int" />
-          <Property Name="CreateTime" Type="datetime" />
-          <Property Name="CreatePerson" Type="nvarchar" MaxLength="200" />
         </EntityType>
         <EntityType Name="SysEmail">
           <Key>
@@ -321,66 +278,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_SYSDOCUM_REFERENCE_SYSDEPAR">
-          <End Role="SysDepartment" Type="Self.SysDepartment" Multiplicity="1" />
-          <End Role="SysDocumentSysDepartment" Type="Self.SysDocumentSysDepartment" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="SysDepartment">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="SysDocumentSysDepartment">
-              <PropertyRef Name="SysDepartmentId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_SYSDOCUM_REFERENCE_SYSDOCUM">
-          <End Role="SysDocument" Type="Self.SysDocument" Multiplicity="0..1" />
-          <End Role="SysDocumentTalk" Type="Self.SysDocumentTalk" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="SysDocument">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="SysDocumentTalk">
-              <PropertyRef Name="SysDocumentId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_SYSDOCUM_REFERENCE_SYSDOCUM2">
-          <End Role="SysDocument" Type="Self.SysDocument" Multiplicity="1" />
-          <End Role="SysDocumentSysDepartment" Type="Self.SysDocumentSysDepartment" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="SysDocument">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="SysDocumentSysDepartment">
-              <PropertyRef Name="Sys_Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_SYSDOCUM_REFERENCE_SYSDOCUM3">
-          <End Role="SysDocument" Type="Self.SysDocument" Multiplicity="1" />
-          <End Role="SysDocumentSysPerson" Type="Self.SysDocumentSysPerson" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="SysDocument">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="SysDocumentSysPerson">
-              <PropertyRef Name="SysSysDocumentId_Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_SYSDOCUM_REFERENCE_SYSPERSO">
-          <End Role="SysPerson" Type="Self.SysPerson" Multiplicity="1" />
-          <End Role="SysDocumentSysPerson" Type="Self.SysDocumentSysPerson" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="SysPerson">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="SysDocumentSysPerson">
-              <PropertyRef Name="SysPersonId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_SYSEMAIL_REFERENCE_SYSEMAIL">
           <End Role="SysEmailTemp" Type="Self.SysEmailTemp" Multiplicity="0..1" />
           <End Role="SysEmail" Type="Self.SysEmail" Multiplicity="*" />
@@ -529,10 +426,6 @@
           <EntitySet Name="FileUploader" EntityType="Self.FileUploader" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SysAnnouncement" EntityType="Self.SysAnnouncement" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SysDepartment" EntityType="Self.SysDepartment" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="SysDocument" EntityType="Self.SysDocument" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="SysDocumentSysDepartment" EntityType="Self.SysDocumentSysDepartment" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="SysDocumentSysPerson" EntityType="Self.SysDocumentSysPerson" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="SysDocumentTalk" EntityType="Self.SysDocumentTalk" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SysEmail" EntityType="Self.SysEmail" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SysEmailTemp" EntityType="Self.SysEmailTemp" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SysException" EntityType="Self.SysException" Schema="dbo" store:Type="Tables" />
@@ -551,26 +444,6 @@
           <AssociationSet Name="FK_SYSDEPAR_REFERENCE_SYSDEPAR" Association="Self.FK_SYSDEPAR_REFERENCE_SYSDEPAR">
             <End Role="SysDepartment" EntitySet="SysDepartment" />
             <End Role="SysDepartment1" EntitySet="SysDepartment" />
-          </AssociationSet>
-          <AssociationSet Name="FK_SYSDOCUM_REFERENCE_SYSDEPAR" Association="Self.FK_SYSDOCUM_REFERENCE_SYSDEPAR">
-            <End Role="SysDepartment" EntitySet="SysDepartment" />
-            <End Role="SysDocumentSysDepartment" EntitySet="SysDocumentSysDepartment" />
-          </AssociationSet>
-          <AssociationSet Name="FK_SYSDOCUM_REFERENCE_SYSDOCUM" Association="Self.FK_SYSDOCUM_REFERENCE_SYSDOCUM">
-            <End Role="SysDocument" EntitySet="SysDocument" />
-            <End Role="SysDocumentTalk" EntitySet="SysDocumentTalk" />
-          </AssociationSet>
-          <AssociationSet Name="FK_SYSDOCUM_REFERENCE_SYSDOCUM2" Association="Self.FK_SYSDOCUM_REFERENCE_SYSDOCUM2">
-            <End Role="SysDocument" EntitySet="SysDocument" />
-            <End Role="SysDocumentSysDepartment" EntitySet="SysDocumentSysDepartment" />
-          </AssociationSet>
-          <AssociationSet Name="FK_SYSDOCUM_REFERENCE_SYSDOCUM3" Association="Self.FK_SYSDOCUM_REFERENCE_SYSDOCUM3">
-            <End Role="SysDocument" EntitySet="SysDocument" />
-            <End Role="SysDocumentSysPerson" EntitySet="SysDocumentSysPerson" />
-          </AssociationSet>
-          <AssociationSet Name="FK_SYSDOCUM_REFERENCE_SYSPERSO" Association="Self.FK_SYSDOCUM_REFERENCE_SYSPERSO">
-            <End Role="SysPerson" EntitySet="SysPerson" />
-            <End Role="SysDocumentSysPerson" EntitySet="SysDocumentSysPerson" />
           </AssociationSet>
           <AssociationSet Name="FK_SYSEMAIL_REFERENCE_SYSEMAIL" Association="Self.FK_SYSEMAIL_REFERENCE_SYSEMAIL">
             <End Role="SysEmailTemp" EntitySet="SysEmailTemp" />
@@ -629,8 +502,6 @@
           <EntitySet Name="FileUploader" EntityType="SysModel.FileUploader" />
           <EntitySet Name="SysAnnouncement" EntityType="SysModel.SysAnnouncement" />
           <EntitySet Name="SysDepartment" EntityType="SysModel.SysDepartment" />
-          <EntitySet Name="SysDocument" EntityType="SysModel.SysDocument" />
-          <EntitySet Name="SysDocumentTalk" EntityType="SysModel.SysDocumentTalk" />
           <EntitySet Name="SysEmail" EntityType="SysModel.SysEmail" />
           <EntitySet Name="SysEmailTemp" EntityType="SysModel.SysEmailTemp" />
           <EntitySet Name="SysException" EntityType="SysModel.SysException" />
@@ -651,10 +522,6 @@
           <AssociationSet Name="FK_SYSPERSO_REFERENCE_SYSDEPAR" Association="SysModel.FK_SYSPERSO_REFERENCE_SYSDEPAR">
             <End Role="SysDepartment" EntitySet="SysDepartment" />
             <End Role="SysPerson" EntitySet="SysPerson" />
-          </AssociationSet>
-          <AssociationSet Name="FK_SYSDOCUM_REFERENCE_SYSDOCUM" Association="SysModel.FK_SYSDOCUM_REFERENCE_SYSDOCUM">
-            <End Role="SysDocument" EntitySet="SysDocument" />
-            <End Role="SysDocumentTalk" EntitySet="SysDocumentTalk" />
           </AssociationSet>
           <AssociationSet Name="FK_SYSEMAIL_REFERENCE_SYSEMAIL" Association="SysModel.FK_SYSEMAIL_REFERENCE_SYSEMAIL">
             <End Role="SysEmailTemp" EntitySet="SysEmailTemp" />
@@ -683,14 +550,6 @@
           <AssociationSet Name="FK_SYSMESSA_REFERENCE_SYSMESSA" Association="SysModel.FK_SYSMESSA_REFERENCE_SYSMESSA">
             <End Role="SysMessageTemp" EntitySet="SysMessageTemp" />
             <End Role="SysMessage" EntitySet="SysMessage" />
-          </AssociationSet>
-          <AssociationSet Name="SysDocumentSysDepartment" Association="SysModel.SysDocumentSysDepartment">
-            <End Role="SysDepartment" EntitySet="SysDepartment" />
-            <End Role="SysDocument" EntitySet="SysDocument" />
-          </AssociationSet>
-          <AssociationSet Name="SysDocumentSysPerson" Association="SysModel.SysDocumentSysPerson">
-            <End Role="SysDocument" EntitySet="SysDocument" />
-            <End Role="SysPerson" EntitySet="SysPerson" />
           </AssociationSet>
           <AssociationSet Name="SysMenuSysOperation" Association="SysModel.SysMenuSysOperation">
             <End Role="SysMenu" EntitySet="SysMenu" />
@@ -744,38 +603,6 @@
           <NavigationProperty Name="SysDepartment1" Relationship="SysModel.FK_SYSDEPAR_REFERENCE_SYSDEPAR" FromRole="SysDepartment" ToRole="SysDepartment1" />
           <NavigationProperty Name="SysDepartment2" Relationship="SysModel.FK_SYSDEPAR_REFERENCE_SYSDEPAR" FromRole="SysDepartment1" ToRole="SysDepartment" />
           <NavigationProperty Name="SysPerson" Relationship="SysModel.FK_SYSPERSO_REFERENCE_SYSDEPAR" FromRole="SysDepartment" ToRole="SysPerson" />
-          <NavigationProperty Name="SysDocument" Relationship="SysModel.SysDocumentSysDepartment" FromRole="SysDepartment" ToRole="SysDocument" />
-        </EntityType>
-        <EntityType Name="SysDocument">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="String" Nullable="false" MaxLength="36" FixedLength="false" Unicode="true" />
-          <Property Name="Name" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="Path" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="FullPath" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="Suffix" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="Size" Type="Int32" />
-          <Property Name="Remark" Type="String" MaxLength="4000" FixedLength="false" Unicode="true" />
-          <Property Name="Download" Type="Int32" />
-          <Property Name="CreateTime" Type="DateTime" Precision="3" />
-          <Property Name="CreatePerson" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="SysDocumentTalk" Relationship="SysModel.FK_SYSDOCUM_REFERENCE_SYSDOCUM" FromRole="SysDocument" ToRole="SysDocumentTalk" />
-          <NavigationProperty Name="SysDepartment" Relationship="SysModel.SysDocumentSysDepartment" FromRole="SysDocument" ToRole="SysDepartment" />
-          <NavigationProperty Name="SysPerson" Relationship="SysModel.SysDocumentSysPerson" FromRole="SysDocument" ToRole="SysPerson" />
-        </EntityType>
-        <EntityType Name="SysDocumentTalk">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="String" Nullable="false" MaxLength="36" FixedLength="false" Unicode="true" />
-          <Property Name="Content" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="SysDocumentId" Type="String" MaxLength="36" FixedLength="false" Unicode="true" />
-          <Property Name="Bad" Type="Int32" />
-          <Property Name="Good" Type="Int32" />
-          <Property Name="CreateTime" Type="DateTime" Precision="3" />
-          <Property Name="CreatePerson" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="SysDocument" Relationship="SysModel.FK_SYSDOCUM_REFERENCE_SYSDOCUM" FromRole="SysDocumentTalk" ToRole="SysDocument" />
         </EntityType>
         <EntityType Name="SysEmail">
           <Key>
@@ -984,7 +811,6 @@
           <Property Name="Version" Type="Binary" MaxLength="8" FixedLength="true" annotation:StoreGeneratedPattern="Computed" />
           <Property Name="HDpic" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="SysDepartment" Relationship="SysModel.FK_SYSPERSO_REFERENCE_SYSDEPAR" FromRole="SysPerson" ToRole="SysDepartment" />
-          <NavigationProperty Name="SysDocument" Relationship="SysModel.SysDocumentSysPerson" FromRole="SysPerson" ToRole="SysDocument" />
           <NavigationProperty Name="SysRole" Relationship="SysModel.SysRoleSysPerson" FromRole="SysPerson" ToRole="SysRole" />
         </EntityType>
         <EntityType Name="SysRole">
@@ -1022,18 +848,6 @@
             </Principal>
             <Dependent Role="SysPerson">
               <PropertyRef Name="SysDepartmentId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_SYSDOCUM_REFERENCE_SYSDOCUM">
-          <End Type="SysModel.SysDocument" Role="SysDocument" Multiplicity="0..1" />
-          <End Type="SysModel.SysDocumentTalk" Role="SysDocumentTalk" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="SysDocument">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="SysDocumentTalk">
-              <PropertyRef Name="SysDocumentId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1121,14 +935,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="SysDocumentSysDepartment">
-          <End Type="SysModel.SysDepartment" Role="SysDepartment" Multiplicity="*" />
-          <End Type="SysModel.SysDocument" Role="SysDocument" Multiplicity="*" />
-        </Association>
-        <Association Name="SysDocumentSysPerson">
-          <End Type="SysModel.SysDocument" Role="SysDocument" Multiplicity="*" />
-          <End Type="SysModel.SysPerson" Role="SysPerson" Multiplicity="*" />
-        </Association>
         <Association Name="SysMenuSysOperation">
           <End Type="SysModel.SysMenu" Role="SysMenu" Multiplicity="*" />
           <End Type="SysModel.SysOperation" Role="SysOperation" Multiplicity="*" />
@@ -1183,35 +989,6 @@
                 <ScalarProperty Name="Address" ColumnName="Address" />
                 <ScalarProperty Name="ParentId" ColumnName="ParentId" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="SysDocument">
-            <EntityTypeMapping TypeName="SysModel.SysDocument">
-              <MappingFragment StoreEntitySet="SysDocument">
-                <ScalarProperty Name="CreatePerson" ColumnName="CreatePerson" />
-                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
-                <ScalarProperty Name="Download" ColumnName="Download" />
-                <ScalarProperty Name="Remark" ColumnName="Remark" />
-                <ScalarProperty Name="Size" ColumnName="Size" />
-                <ScalarProperty Name="Suffix" ColumnName="Suffix" />
-                <ScalarProperty Name="FullPath" ColumnName="FullPath" />
-                <ScalarProperty Name="Path" ColumnName="Path" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="SysDocumentTalk">
-            <EntityTypeMapping TypeName="SysModel.SysDocumentTalk">
-              <MappingFragment StoreEntitySet="SysDocumentTalk">
-                <ScalarProperty Name="CreatePerson" ColumnName="CreatePerson" />
-                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
-                <ScalarProperty Name="Good" ColumnName="Good" />
-                <ScalarProperty Name="Bad" ColumnName="Bad" />
-                <ScalarProperty Name="SysDocumentId" ColumnName="SysDocumentId" />
-                <ScalarProperty Name="Content" ColumnName="Content" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -1433,22 +1210,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <AssociationSetMapping Name="SysDocumentSysDepartment" TypeName="SysModel.SysDocumentSysDepartment" StoreEntitySet="SysDocumentSysDepartment">
-            <EndProperty Name="SysDocument">
-              <ScalarProperty Name="Id" ColumnName="Sys_Id" />
-            </EndProperty>
-            <EndProperty Name="SysDepartment">
-              <ScalarProperty Name="Id" ColumnName="SysDepartmentId" />
-            </EndProperty>
-          </AssociationSetMapping>
-          <AssociationSetMapping Name="SysDocumentSysPerson" TypeName="SysModel.SysDocumentSysPerson" StoreEntitySet="SysDocumentSysPerson">
-            <EndProperty Name="SysPerson">
-              <ScalarProperty Name="Id" ColumnName="SysPersonId" />
-            </EndProperty>
-            <EndProperty Name="SysDocument">
-              <ScalarProperty Name="Id" ColumnName="SysSysDocumentId_Id" />
-            </EndProperty>
-          </AssociationSetMapping>
           <AssociationSetMapping Name="SysMenuSysOperation" TypeName="SysModel.SysMenuSysOperation" StoreEntitySet="SysMenuSysOperation">
             <EndProperty Name="SysOperation">
               <ScalarProperty Name="Id" ColumnName="SysOperationId" />

@@ -8,6 +8,19 @@ namespace Langben.BLL
 {
     public class HomeBLL : IHomeBLL, IDisposable
     {
+        //
+        public string firstMenu = @"
+  <li id='liRecruit'>
+                        <a href='javascript:void(0);'>
+                            <span class='{0}'>
+                                <span class='path1'></span><span class='path2'></span>
+                            </span>
+                            <span class='title'>{1}</span> <span class='selected'></span> <span class='arrow'></span>
+                        </a>
+                        <ul id='ulRecruit' class='sub-menu'>^</ul></li>
+";
+        public string sanMenu = @"<li><a href='javascript:void(0);' page=@{0}@ id=@{1}@>{2}</a></li>^";
+
         /// <summary>
         /// 根据PersonId 获取已经启用的菜单
         /// </summary>
@@ -19,7 +32,7 @@ namespace Langben.BLL
             {
                 string personId = person.Id;
                 var roleIds =
-                           (
+                           (//该用户的所有角色
                            from r in db.SysRole
                            from p in r.SysPerson
                            where p.Id == personId
@@ -28,7 +41,7 @@ namespace Langben.BLL
                 person.RoleIds = roleIds;
 
                 List<SysMenu> menuNeed =
-                            (
+                            (//该用户的角色下的菜单
                             from m2 in db.SysMenu
                             from f in m2.SysMenuSysRoleSysOperation
 
@@ -47,11 +60,11 @@ namespace Langben.BLL
                     {
                         current = menuNeed[i].Remark.Length / 4;//按照4位数字的编码格式
 
-                        if (current == 1)//加载根目录的菜单
+                        if (current == 1)//加载根目录的菜单                       
                         {
                             //解决ie6下没有滚动条的问题
                             strmenu2.Replace('^', ' ')
-                                .Append(string.Format(" <div data-options=@iconCls:'{0}',selected:{1}@ title=@{2}@> <div class=@easyui-panel@ fit=@true@ border=@false@><ul class=@easyui-tree@ >^</ul></div></div>", menuNeed[i].Iconic, menuNeed[i].State == "折叠" ? "false" : "true", menuNeed[i].Name));
+                                .Append(string.Format(firstMenu, menuNeed[i].Iconic, menuNeed[i].Name));
                         }
                         else if (current < lever)//进入上一个菜单层级
                         {
@@ -67,10 +80,11 @@ namespace Langben.BLL
                         }
                         else//进入本级菜单或者下一个菜单
                         {
-
-                            if ((i == menuNeed.Count - 1) || (menuNeed[i].Remark.Length >= menuNeed[i + 1].Remark.Length))//最后一个，或者下一个长度不小于这个的长度
+//最后一个，或者下一个长度不小于这个的长度
+                            if ((i == menuNeed.Count - 1) || (menuNeed[i].Remark.Length >= menuNeed[i + 1].Remark.Length))
+                            { 
                                 strmenu2.Replace("^", GetNode(menuNeed[i], true));
-                            else
+                           } else
                                 strmenu2.Replace("^", GetNode(menuNeed[i], false));
 
                         }
@@ -87,25 +101,23 @@ namespace Langben.BLL
         /// <returns></returns>
         public string GetNode(SysMenu item, bool isLeaf = false)
         {
-            List<string> dataoptions = new List<string>();
-            if (!string.IsNullOrWhiteSpace(item.Iconic))
-            {
-                dataoptions.Add(string.Format("iconCls:'{0}'", item.Iconic));
-            }
-
+         
             if (isLeaf)
             {
-                return string.Format("<li data-options=@{0}@><a href=@#@ icon=@{1}@ rel=@{2}@ id=@{3}@>{4}</a></li>^", string.Join(",", dataoptions), item.Iconic, item.Url, item.Id, item.Name);
+                return string.Format(sanMenu,
+                   item.Url, item.Id, item.Name);
 
             }
             else
             {
-                ////此处可以在数据字典中配置，将State字段，配置为下拉框，下拉框其中有一个值是"收缩"
-                if (!string.IsNullOrWhiteSpace(item.State) && item.State == "折叠")//收缩展开 && item.State == "收缩"
-                {//菜单默认显示关闭
-                    dataoptions.Add(string.Format("state:'closed'"));
+                if (string.IsNullOrWhiteSpace(item.Iconic))
+                {
+                    return string.Format(firstMenu, string.Empty, item.Name);//没有图标
                 }
-                return string.Format("<li data-options=@{0}@><span>{1}</span><ul>^</ul></li>", string.Join(",", dataoptions), item.Name);
+                else
+                {
+                    return string.Format(firstMenu, item.Iconic, item.Name);//没有图标
+                }
             }
         }
 

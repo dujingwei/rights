@@ -163,54 +163,6 @@ namespace Langben.DAL
             }
         }
 
-        /// <summary>
-        /// 获取在该表一条数据中，出现的所有外键实体
-        /// </summary>
-        /// <param name="id">主键</param>
-        /// <returns>外键实体集合</returns>
-        public IQueryable<SysDocument> GetRefSysDocument(string id)
-        {
-            using (SysEntities db = new SysEntities())
-            {
-                return GetRefSysDocument(db, id);
-            }
-        }
-        /// <summary>
-        /// 获取在该表一条数据中，出现的所有外键实体
-        /// </summary>
-        /// <param name="id">主键</param>
-        /// <returns>外键实体集合</returns>
-        public IQueryable<SysDocument> GetRefSysDocument(SysEntities db, string id)
-        {
-                return from m in db.SysPerson
-                       from f in m.SysDocument
-                       where m.Id == id
-                       select f;
-
-        }
-        /// <summary>
-        /// 获取在该表中出现的所有外键实体
-        /// </summary>
-        /// <param name="id">主键</param>
-        /// <returns>外键实体集合</returns>
-        public IQueryable<SysDocument> GetRefSysDocument(SysEntities db)
-        {
-            return from m in db.SysPerson
-                   from f in m.SysDocument
-                   select f;
-        }
-        /// <summary>
-        /// 获取在该表中出现的所有外键实体
-        /// </summary>
-        /// <param name="id">主键</param>
-        /// <returns>外键实体集合</returns>
-        public IQueryable<SysDocument> GetRefSysDocument()
-        {
-            using (SysEntities db = new SysEntities())
-            {
-                return GetRefSysDocument(db);
-            }
-        }
 
        
         /// <summary>
