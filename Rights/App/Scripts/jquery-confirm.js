@@ -1,4 +1,4 @@
-/*!
+﻿/*!
  * jquery-confirm v3.0.1 (http://craftpip.github.io/jquery-confirm/)
  * Author: Boniface Pereira
  * Website: www.craftpip.com
@@ -1040,7 +1040,7 @@ var jconfirm, Jconfirm;
         '</div>' +
         '<div class="jconfirm-clear">' +
         '</div></div></div></div></div></div></div>',
-        title: 'Hello',
+        title: '详情',
         titleClass: '',
         type: 'default',
         typeAnimated: true,

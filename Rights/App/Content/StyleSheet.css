@@ -314,3 +314,34 @@ textarea {
     border: 0 none;
     display: inline;
 }
+/*最新版本index页面*/
+    .red {
+        color: #dd5a43 !important;
+    }
+
+    .green {
+        color: #69aa46 !important;
+    }
+
+    .bigger-130 {
+        font-size: 130% !important;
+    }
+
+    .action-buttons a {
+        margin: 0 7px;
+        display: inline-block;
+        opacity: 0.85;
+        -webkit-transition: all 0.1s;
+        -o-transition: all 0.1s;
+        transition: all 0.1s;
+    }
+
+        .action-buttons a:hover {
+            text-decoration: none;
+            opacity: 1;
+            -moz-transform: scale(1.2);
+            -webkit-transform: scale(1.2);
+            -o-transform: scale(1.2);
+            -ms-transform: scale(1.2);
+            transform: scale(1.2);
+        }

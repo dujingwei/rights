@@ -1,4 +1,38 @@
-﻿function returnParent(value) {//获取子窗体返回值
+﻿
+//index页面的dataTable扩展
+  $.extend($.fn.dataTable.defaults, {
+        dom: "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-5'i><'col-sm-7'p>>",//默认是lfrtip
+        processing: true,//加载中
+        responsive: true,
+        serverSide: true,//服务器模式
+        searching: false,//datatables自带的搜索
+        pagingType: "full_numbers",//分页模式        
+        language: {
+            "processing": "努力加载中...",
+            "lengthMenu": "每页显示 _MENU_ 条数据",
+            "zeroRecords": "没有匹配数据",
+            "info": "显示第 _START_ 至 _END_ 项，共 _TOTAL_ 项",
+            "infoEmpty": "努力了，但没找到数据",
+            "infoFiltered": "",
+            "infoPostFix": "",
+            "emptyTable": "没有匹配结果",
+            "loadingRecords": "载入中...",
+            "thousands": ",",
+            "paginate": {
+                "first": "首页",
+                "previous": "上一页",
+                "next": "下一页",
+                "last": "末页"
+            },
+            "aria": {
+                "sortAscending": ": 以升序排列此列",
+                "sortDescending": ": 以降序排列此列"
+            }
+        }
+    });
+
+function returnParent(value) {//获取子窗体返回值
     var parent = window.dialogArguments; //获取父页面
     //parent.location.reload(); //刷新父页面
     if (parent != null && parent != "undefined") {
