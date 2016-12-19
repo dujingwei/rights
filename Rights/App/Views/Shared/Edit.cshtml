@@ -27,40 +27,24 @@
                             content: data,
                             buttons: {
                                 ok: {
-                                    text: "继续!",
+                                    text: "继续",
                                     btnClass: 'btn-primary',
                                     keys: ['enter'],
                                     action: function () {
-                                        console.log('the user clicked confirm');
+                                     
                                     }
                                 },
                                 cancel: {
-                                    text: "返回!",
+                                    text: "返回",
                                     btnClass: 'btn',
-
                                     action: function () {
-                                        console.log('s');
+                                        $("#contentBody").load("/SysLog", function () {
+
+                                        });
                                     }
                                 }
                             }
-                        });
-
-                        if (data.code == 1) {
-                            $.alert({
-                                title: '操作提示',
-                                content: data,
-                                confirmButton: '确定',
-                                backgroundDismiss: false,
-                                autoClose: 'confirm|2000',
-                                confirm: function () {
-                                    alert(2);
-                                 //   ShowInfo(data.newid, '');
-                                }
-                            });
-                        }
-                        else {
-
-                        }
+                        });                      
 
                     }
                 });

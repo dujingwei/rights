@@ -27,7 +27,7 @@ namespace Langben.DAL
 
 			[ScaffoldColumn(true)]
 			[Display(Name = "内容", Order = 3)]
-			[StringLength(4000, ErrorMessage = "长度不可超过4000")]
+			[StringLength(4, ErrorMessage = "长度不可超过4")]
 			public object Message { get; set; }
 
 			[ScaffoldColumn(true)]
