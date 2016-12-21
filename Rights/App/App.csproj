@@ -971,6 +971,7 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\dataTables.bootstrap.css" />
     <Content Include="Content\dataTables.semanticui.css" />
+    <Content Include="Content\daterangepicker.css" />
     <Content Include="Content\Default.css" />
     <Content Include="Content\jquery-confirm.css" />
     <Content Include="Content\jquery-confirm.min.css" />
@@ -1626,6 +1627,7 @@
     <Content Include="Res\jquery.uploadify-v2.1.4\uploadify.fla" />
     <Content Include="Res\jquery.uploadify-v2.1.4\uploadify.php" />
     <Content Include="Scripts\dataTables.bootstrap.js" />
+    <Content Include="Scripts\daterangepicker.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <Content Include="Scripts\jquery-confirm.js" />
     <Content Include="Scripts\jquery-confirm.min.js" />
@@ -1764,6 +1766,8 @@
     <Content Include="Scripts\JScriptCommon.js" />
     <Content Include="Scripts\JScriptIndex.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
+    <Content Include="Scripts\moment.js" />
+    <Content Include="Scripts\moment.min.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\Theme.js" />

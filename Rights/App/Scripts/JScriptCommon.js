@@ -1,4 +1,6 @@
-﻿
+﻿document.write("<script language='javascript'  src='~/Scripts/moment.js'</script>");
+document.write("<script language='javascript'  src='~/Scripts/daterangepicker.js'></script>");
+
 //index页面的dataTable扩展
   $.extend($.fn.dataTable.defaults, {
         dom: "<'row'<'col-sm-12'tr>>" +
@@ -31,7 +33,38 @@
             }
         }
     });
-
+  function daterangepicker2(id, datepicker) {
+      var options = {};
+      options.ranges = {
+          '今天': [moment(), moment()],
+          '昨天': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+          '最近7天': [moment().subtract(6, 'days'), moment()],
+          '最近30天': [moment().subtract(29, 'days'), moment()],
+          //'This Month': [moment().startOf('month'), moment().endOf('month')],//这个月
+          //'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]//上个月
+      };
+      options.opens = 'right';//日期选择框的弹出位置
+      options.singleDatePicker = datepicker;//选择单个时间
+      options.buttonClasses = 'btn btn-default';
+      options.applyClass = 'btn-small btn-primary blue';
+      options.cancelClass = 'btn-small';
+      options.locale = {
+          separator: ' - ',//时间分割符
+          format: 'YYYY-MM-DD',//时间格式
+          applyLabel: '确定',
+          cancelLabel: '取消',
+          fromLabel: '起始时间',
+          toLabel: '结束时间',
+          customRangeLabel: '自定义',
+          daysOfWeek: ['日', '一', '二', '三', '四', '五', '六'],
+          monthNames: ['一月', '二月', '三月', '四月', '五月', '六月',
+                  '七月', '八月', '九月', '十月', '十一月', '十二月'],
+          firstDay: 1
+      };
+      options.dateFormat = 'YYYY-MM-DD';
+      options.showDropdowns = true;//年月加下拉框
+      $(id).daterangepicker(options, function (start, end, label) { console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')'); });
+  }
 function returnParent(value) {//获取子窗体返回值
     var parent = window.dialogArguments; //获取父页面
     //parent.location.reload(); //刷新父页面
