@@ -78,7 +78,11 @@ input {
     display: inline;
 }
 
-
+/*意见反馈*/
+.rightFeedback{ width:40px; height:100px; position:fixed; _position:absolute; bottom:30px; right:1px; z-index:100; background:#E8E8E8; border:1px solid #CECECE; border-radius:4px; text-align:center; cursor:pointer; padding-top:10px}
+.rightFeedback a:link{ color:#666; text-decoration:none}
+.rightFeedback a:hover{ color:#333; text-decoration:none}
+ 
 /* Styles for Search
 ----------------------------------------------------------*/
 
@@ -345,3 +349,8 @@ textarea {
             -ms-transform: scale(1.2);
             transform: scale(1.2);
         }
+
+/*详情*/
+.datails-table{}
+.datails-table .row{border-bottom:1px solid #DDDDDD; margin-bottom:10px}
+.datails-table .control-label{ color:#999}
