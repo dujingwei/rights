@@ -12,10 +12,16 @@
         <div class="col-md-4">
             <div class="form-group">
                 @Html.LabelFor(model => model.CreateTime, new { @class = "control-label col-md-4" })
+                @*<div class="col-md-8 demo">
+                        <input type="text" class="form-control" id="CreateTime" />
+                        <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+                    </div>*@
                 <div class="col-md-8 demo">
-                    <input type="text" class="form-control" id="CreateTime" />
+                    <input type="text" name="CreateTime" id="CreateTime" class="form-control" placeholder="请选择起始时间" readonly size="30">
+                    @*<div class="input-group-addon">x</div>*@
                     <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
                 </div>
+
             </div>
         </div>
 
@@ -29,7 +35,7 @@
             </div>
         </div>
 
-        
+
 
     </div>
 
@@ -100,55 +106,70 @@
     .demo {
         position: relative;
     }
+
     .input-mini {
-    width: 240px !important;
-}
-        .demo i {
-            position: absolute;
-            bottom: 10px;
-            right: 24px;
-            top: auto;
-            cursor: pointer;
-        }
+        width: 240px !important;
+    }
+
+    .demo i {
+        position: absolute;
+        bottom: 10px;
+        right: 24px;
+        top: auto;
+        cursor: pointer;
+    }
 </style>
 <script type="text/javascript">
     $(document).ready(function () {
-            daterangepicker2("#CreateTime", true);
-           
-        });
-    //时间段
-        function updateConfig() {
-            var options = {};
-            options.ranges = {
+
+        $("#CreateTime").daterangepicker({
+            timePicker: false, //显示时间
+            timePicker24Hour: true, //时间制
+            timePickerSeconds: true, //时间显示到秒
+            //startDate: moment().hours(0).minutes(0).seconds(0), //设置开始日期
+            //endDate: moment(new Date()), //设置结束器日期
+            //maxDate: moment(new Date()), //设置最大日期
+            "opens": "center",
+            ranges: {
                 '今天': [moment(), moment()],
                 '昨天': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-                '最近7天': [moment().subtract(6, 'days'), moment()],
-                '最近30天': [moment().subtract(29, 'days'), moment()],
-                //'This Month': [moment().startOf('month'), moment().endOf('month')],//这个月
-                //'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]//上个月
-            };
-            options.opens = 'right';//日期选择框的弹出位置
-            //options.singleDatePicker = true;//选择单个时间
-            options.buttonClasses = 'btn btn-default';
-            options.applyClass = 'btn-small btn-primary blue';
-            options.cancelClass = 'btn-small';
-            options.locale = {
-                separator: ' - ',//时间分割符
-                format: 'YYYY-MM-DD',//时间格式
-                applyLabel: '确定',
-                cancelLabel: '取消',
-                fromLabel: '起始时间',
-                toLabel: '结束时间',
+                '上周': [moment().subtract(6, 'days'), moment()],
+                '前30天': [moment().subtract(29, 'days'), moment()],
+                '本月': [moment().startOf('month'), moment().endOf('month')],
+                '上月': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            },
+            showWeekNumbers: true,
+            alwaysShowCalendars: true,//显示时间列表
+            //showDropdowns: true,//年月加下拉框
+            locale: {
+                //format: "YYYY-MM-DD HH:mm:ss", //设置显示格式
+                format: "YYYY-MM-DD", //设置显示格式
+                applyLabel: '确定', //确定按钮文本
+                cancelLabel: '取消', //取消按钮文本
                 customRangeLabel: '自定义',
                 daysOfWeek: ['日', '一', '二', '三', '四', '五', '六'],
                 monthNames: ['一月', '二月', '三月', '四月', '五月', '六月',
-                        '七月', '八月', '九月', '十月', '十一月', '十二月'],
+                    '七月', '八月', '九月', '十月', '十一月', '十二月'
+                ],
+                separator: '~',
                 firstDay: 1
-            };
-            options.dateFormat = 'YYYY-MM-DD';
-            options.showDropdowns = true;//年月加下拉框
-            $('#CreateTime').daterangepicker(options, function (start, end, label) { console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')'); });
-        }
+            },
+        }, function (start, end, label) {
+
+            //timeRangeChange = [start.format('YYYY-MM-DD HH:mm:ss'), end.format('YYYY-MM-DD HH:mm:ss')];
+            //timeRangeChange = [start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD')];
+            //console.log(timeRangeChange);
+        });
+        $('#CreateTime').val('');
+        //清空日期
+        $('#CreateTime').on('cancel.daterangepicker', function (ev, picker) {
+            $('#CreateTime').val('');
+            //searchModel.Start = null;
+            //searchModel.End = null;
+        });
+    });
+
+
 
 </script>
 <script type="text/javascript" language="javascript">
@@ -168,15 +189,15 @@
             order: [[0, "desc"]],
             columns: [
 
-            { data: 'PersonId' },
+                { data: 'PersonId' },
 
-            { data: 'Result' },
+                { data: 'Result' },
 
-            { data: 'MenuId' },
+                { data: 'MenuId' },
 
-            { data: 'Ip' },
+                { data: 'Ip' },
 
-            { data: 'State' },
+                { data: 'State' },
 
                 {
                     data: 'CreateTime', render: function (data, type, full, meta) {
@@ -186,29 +207,29 @@
                     }
                 },
 
-            { data: 'CreatePerson' },
+                { data: 'CreatePerson' },
 
-            { data: 'Message' },
+                { data: 'Message' },
 
-            { data: 'Remark' },
+                { data: 'Remark' },
 
-            { data: 'Id' },
+                { data: 'Id' },
 
 
-               { data: "操作" }
+                { data: "操作" }
             ],
             columnDefs: [
-                 {
-                     targets: 1,//第一列
-                     render: function (data, type, full, meta) {
+                {
+                    targets: 1,//第一列
+                    render: function (data, type, full, meta) {
 
-                         data = (data != null) ? data : '';
+                        data = (data != null) ? data : '';
 
-                         return '<a href="#" onclick="langbenView('
-                           + "'" + full.Id + "'"
-                           + ')">' + data + '</a>';
-                     }
-                 },
+                        return '<a href="#" onclick="langbenView('
+                            + "'" + full.Id + "'"
+                            + ')">' + data + '</a>';
+                    }
+                },
                 {
                     targets: -1,//-1表示最后一列
                     width: "70px",//固定宽度
@@ -217,7 +238,7 @@
                         return '<div class="hidden-sm hidden-xs action-buttons"><a class="green" href="#" onclick="langbenModify('
                             + "'" + full.Id + "'"
                             + ')"><i class="ace-icon fa fa-pencil bigger-130"></i></a><a class="red langbenDelete" href="#" id="'
-                          + full.Id
+                            + full.Id
                             + '"><i class="ace-icon fa fa-trash-o bigger-130"></i></a></div>' +
                             '';
                     }
@@ -306,8 +327,8 @@
                 }
             });
         });
-        
-        });
+
+    });
     //创建
     function langbenCreate() {
 
