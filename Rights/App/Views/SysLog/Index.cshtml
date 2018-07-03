@@ -3,44 +3,31 @@
 
 @using Common
 @using Models
-<link href="~/Content/daterangepicker.css" rel="stylesheet" />
-<script src="~/Scripts/moment.js"></script>
-<script src="~/Scripts/daterangepicker.js"></script>
-<div id="divQuery" class="form-horizontal">
+
+<div id="divdQuery" class="form-horizontal">
 
     <div class="row">
         <div class="col-md-4">
             <div class="form-group">
                 @Html.LabelFor(model => model.CreateTime, new { @class = "control-label col-md-4" })
-                <div class="col-md-8 demo">
-                    <input type="text" name="CreateTime" id="CreateTime" class="form-control" placeholder="请选择起始时间" readonly size="30">
-                    <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+                <div class="col-md-7 demo">
+                    <input type="text" name="CreateTime" id="CreateTime" class="form-control input-large" placeholder="请选择起始时间" readonly size="30">
+                
                 </div>
             </div>
         </div>
-
-        @*<div class="col-md-4">
-                <div class="form-group">
-                    @Html.LabelFor(model => model.State, new { @class = "control-label col-md-4" })
-                    <div class="col-md-8">
-                        @Html.DropDownList("StateDDL_String", Models.SysFieldModels.GetSysField("SysLog", "State"), "请选择", new { @class = "form-control", id = "StateDDL_String" })
-
-                    </div>
-                </div>
-            </div>*@
-    </div>
-
-    <div class="row">
+ 
+ 
         <div class="col-md-4">
             <div class="form-group">
                 @Html.LabelFor(model => model.Message, new { @class = "control-label col-md-4" })
                 <div class="col-md-8">
-                    <input type="text" class="form-control" id="Message" />
+                    <input type="text" class="form-control input-large" id="Message" />
                 </div>
             </div>
         </div>
         <div class="col-md-4">
-            <button id='langbenQuery' type='submit' class='btn btn-primary'>查 询</button>
+            <button id='langbenQuery' type='submit' class='btn btn-primary '>查 询</button>
         </div>
     </div>
 </div>
