@@ -1,48 +1,58 @@
 ﻿@model Langben.DAL.SysException
+<div class="bigdiv datails-table">
 
-@{
-    Layout = "~/Views/Shared/Details.cshtml";
-}
-@using Common
- @section CurentPlace {
-    详细  
-}
- 
-    <fieldset>
-        <legend>
-            <input class="a2 f2" type="button" onclick="window.location.href = 'javascript:history.go(-1)';" value="返回" />
-        </legend>
-        <div class="bigdiv">
-                  
-           
-                <div class="display-label">
-                    @Html.LabelFor(model => model.Message) :
+   
+
+    <div class="row">
+
+        <div class="col-md-6">
+            <div class="form-group">
+                @Html.LabelFor(model => model.CreatePerson, new { @class = "control-label col-md-4" })
+                <div class="col-md-8">
+                    @Html.DisplayFor(model => model.CreatePerson)
                 </div>
-                <div class="textarea-box">
-                    @Html.TextAreaFor(model => model.Message, new {  @readonly=true})                   
-                </div>      
-                
-             
-                <div class="display-label">
-                    @Html.LabelFor(model => model.Remark) :
-                </div>
-                <div class="textarea-box">
-                    @Html.TextAreaFor(model => model.Remark, new {  @readonly=true})                   
-                </div>      
-               
-                <div class="display-label">
-                      @Html.LabelFor(model => model.CreateTime) :
-                </div>
-                <div class="display-field">
-                    @Html.DisplayFor(model => model.CreateTime) 
-                </div>      
-                <div class="display-label">
-                      @Html.LabelFor(model => model.CreatePerson) :
-                </div>
-                <div class="display-field">
-                    @Html.DisplayFor(model => model.CreatePerson) 
-                </div>
+            </div>
         </div>
-    </fieldset>
+
+        <div class="col-md-6">
+            <div class="form-group">
+                @Html.LabelFor(model => model.CreateTime, new { @class = "control-label col-md-4" })
+                <div class="col-md-8">
+                    @Html.DisplayFor(model => model.CreateTime)
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="row">
+
+        <div class="col-md-12">
+            <div class="form-group">
+                @Html.LabelFor(model => model.Message, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DisplayFor(model => model.Message)
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row">
+
+        <div class="col-md-12">
+            <div class="form-group">
+                @Html.LabelFor(model => model.Remark, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DisplayFor(model => model.Remark)
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
 
 

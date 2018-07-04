@@ -1,7 +1,7 @@
 ﻿
 @model Langben.DAL.SysException
 
-<div id="divdQuery" class="form-horizontal">
+<div id="divQuery" class="form-horizontal">
 
     <div class="row">
         <div class="col-md-4">
@@ -132,17 +132,19 @@
                 //{ data: "操作" }
             ],
             columnDefs: [
-                //{
-                //    targets: 1,//第一列
-                //    render: function (data, type, full, meta) {
+                {
+                    targets: 0,//第一列
+                    width:"50%",
+                    render: function (data, type, full, meta) {
 
-                //        data = (data != null) ? data : '';
+                        data = (data != null) ? data : '';
 
-                //        return '<a href="#" onclick="langbenView('
-                //            + "'" + full.Id + "'"
-                //            + ')">' + data + '</a>';
-                //    }
-                //},
+                        return '<a href="#" onclick="langbenView('
+                            + "'" + full.Id + "'"
+                            + ')">' + data + '</a>';
+                    }
+                },
+                
                 //{
                 //    targets: -1,//-1表示最后一列
                 //    width: "70px",//固定宽度
@@ -158,6 +160,7 @@
                 //},
                 {
                     targets: [1],
+                    width: "25%",
                     orderable: true
                 }
             ]
@@ -178,7 +181,7 @@
                 else
                     search += this.name + "&" + this.value + "^";
             });
-
+            debugger
             $('#search').val(search)
             //重新加载DataTable
             table.ajax.reload();
@@ -278,7 +281,7 @@
             content: function () {
                 var self = this;
                 return $.ajax({
-                    url: '/SysLog/Details/' + id,
+                    url: '/SysException/Details/' + id,
                     method: 'get'
                 }).done(function (response) {
 
