@@ -1,124 +1,208 @@
 ﻿@model Langben.DAL.SysPerson
 
-@{
-    Layout = "~/Views/Shared/Details.cshtml";
-}
-@using Common
- @section CurentPlace {
-    详细  
-}
- 
-    <fieldset>
-        <legend>
-            <input class="a2 f2" type="button" onclick="window.location.href = 'javascript:history.go(-1)';" value="返回" />
-        </legend>
-        <div class="bigdiv">
-            <div style="float:right; width:379px;height:184px;">
-                <img id="showPic" src="~/Images/noPic.jpg" width="149" height="175" />
-                <div style="float:left">
-                    <div id="uploader-demo">
-                        <!--用来存放item-->
-                        <div id="fileList" style="display:none;" class="uploader-list"></div>
-                        <div id="filePicker">上传头像</div>
-                    </div>
+<div class="bigdiv">
+    <div style="float:right; width:379px;height:184px;">
+        <img id="showPic" src="~/Images/noPic.jpg" width="149" height="175" />
+        <div style="float:left">
+            <div id="uploader-demo">
+                <!--用来存放item-->
+                <div id="fileList" style="display:none;" class="uploader-list"></div>
+            </div>
+        </div>
+        @Html.HiddenFor(model => model.HDpic)
+    </div>
+    <div class="row">
+
+        <div class="col-md-6">
+            <div class="form-group">
+                @Html.LabelFor(model => model.Name, new { @class = "control-label col-md-4" })
+                <div class="col-md-8">
+                    @Html.DisplayFor(model => model.Name)
                 </div>
             </div>
-                <div class="display-label">
-                      @Html.LabelFor(model => model.Name) :
+        </div>
+
+        <div class="col-md-6">
+            <div class="form-group">
+                @Html.LabelFor(model => model.MyName, new { @class = "control-label col-md-4" })
+                <div class="col-md-8">
+                    @Html.DisplayFor(model => model.MyName)
                 </div>
-                <div class="display-field">
-                    @Html.DisplayFor(model => model.Name) 
-                </div>      
-                <div class="display-label">
-                      @Html.LabelFor(model => model.MyName) :
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row">
+
+        <div class="col-md-6">
+            <div class="form-group">
+                @Html.LabelFor(model => model.Sex, new { @class = "control-label col-md-4" })
+                <div class="col-md-8">
+                    @Html.DisplayFor(model => model.Sex)
                 </div>
-                <div class="display-field">
-                    @Html.DisplayFor(model => model.MyName) 
-                </div>      
-                
-                <div class="display-label">
-                      @Html.LabelFor(model => model.Sex) :
-                </div>
-                <div class="display-field">
-                    @Html.DisplayFor(model => model.Sex) 
-                </div>        
-                <div class="display-label">
-                      @Html.LabelFor(model => model.SysDepartmentId) :
-                </div>
-                <div class="display-field">
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="form-group">
+                @Html.LabelFor(model => model.SysDepartmentId, new { @class = "control-label col-md-4" })
+                <div class="col-md-8">
                     @if (Model.SysDepartment != null)
-                       {
-                    @Model.SysDepartment.Name
-                    } 
-                </div>      
-                <div class="display-label">
-                      @Html.LabelFor(model => model.Position) :
+                    {
+                        @Model.SysDepartment.Name
+                    }
                 </div>
-                <div class="display-field">
-                    @Html.DisplayFor(model => model.Position) 
-                </div>      
-                <div class="display-label">
-                      @Html.LabelFor(model => model.MobilePhoneNumber) :
-                </div>
-                <div class="display-field">
-                    @Html.DisplayFor(model => model.MobilePhoneNumber) 
-                </div>      
-                <div class="display-label">
-                      @Html.LabelFor(model => model.PhoneNumber) :
-                </div>
-                <div class="display-field">
-                    @Html.DisplayFor(model => model.PhoneNumber) 
-                </div>      
-                <div class="display-label">
-                      @Html.LabelFor(model => model.Province) :
-                </div>
-                <div class="display-field">
-                    @Html.DisplayFor(model => model.Province) 
-                </div>      
-                <div class="display-label">
-                      @Html.LabelFor(model => model.City) :
-                </div>
-                <div class="display-field">
-                    @Html.DisplayFor(model => model.City) 
-                </div>      
-                <div class="display-label">
-                      @Html.LabelFor(model => model.Village) :
-                </div>
-                <div class="display-field">
-                    @Html.DisplayFor(model => model.Village) 
-                </div>      
-                <div class="display-label">
-                      @Html.LabelFor(model => model.Address) :
-                </div>
-                <div class="display-field">
-                    @Html.DisplayFor(model => model.Address) 
-                </div>      
-                <div class="display-label">
-                      @Html.LabelFor(model => model.EmailAddress) :
-                </div>
-                <div class="display-field">
-                    @Html.DisplayFor(model => model.EmailAddress) 
-                </div><div class="display-label">
-    @Html.LabelFor(model => model.State) :
-</div>
-<div class="display-field">
-    @Html.DisplayFor(model => model.State)
-</div>
-<div class="display-label">
-    @Html.LabelFor(model => model.CreateTime) :
-</div>
-<div class="display-field">
-    @Html.DisplayFor(model => model.CreateTime)
-</div>
+            </div>
+        </div>
 
-                <br style="clear: both;" />
-                <div class="display-label">
-                    @Html.LabelFor(model => model.Remark) :
+    </div>
+
+    <div class="row">
+
+        <div class="col-md-6">
+            <div class="form-group">
+                @Html.LabelFor(model => model.Position, new { @class = "control-label col-md-4" })
+                <div class="col-md-8">
+                    @Html.DisplayFor(model => model.Position)
                 </div>
-                <div class="textarea-box">
-                    @Html.TextAreaFor(model => model.Remark, new {  @readonly=true})                   
-                </div>      
-               
-    </fieldset>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="form-group">
+                @Html.LabelFor(model => model.MobilePhoneNumber, new { @class = "control-label col-md-4" })
+                <div class="col-md-8">
+                    @Html.DisplayFor(model => model.MobilePhoneNumber)
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row">
+
+        <div class="col-md-6">
+            <div class="form-group">
+                @Html.LabelFor(model => model.PhoneNumber, new { @class = "control-label col-md-4" })
+                <div class="col-md-8">
+                    @Html.DisplayFor(model => model.PhoneNumber)
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="form-group">
+                @Html.LabelFor(model => model.Province, new { @class = "control-label col-md-4" })
+                <div class="col-md-8">
+                    @Html.DisplayFor(model => model.Province)
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row">
+
+        <div class="col-md-6">
+            <div class="form-group">
+                @Html.LabelFor(model => model.City, new { @class = "control-label col-md-4" })
+                <div class="col-md-8">
+                    @Html.DisplayFor(model => model.City)
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="form-group">
+                @Html.LabelFor(model => model.Village, new { @class = "control-label col-md-4" })
+                <div class="col-md-8">
+                    @Html.DisplayFor(model => model.Village)
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="row">
+
+        <div class="col-md-6">
+            <div class="form-group">
+                @Html.LabelFor(model => model.Address, new { @class = "control-label col-md-4" })
+                <div class="col-md-8">
+                    @Html.DisplayFor(model => model.Address)
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="form-group">
+                @Html.LabelFor(model => model.EmailAddress, new { @class = "control-label col-md-4" })
+                <div class="col-md-8">
+                    @Html.DisplayFor(model => model.EmailAddress)
+                </div>
+            </div>
+        </div>
+
+    </div>
 
 
+    <div class="row">
+
+        <div class="col-md-6">
+            <div class="form-group">
+                @Html.LabelFor(model => model.State, new { @class = "control-label col-md-4" })
+                <div class="col-md-8">
+                    @Html.DisplayFor(model => model.State)
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="form-group">
+                @Html.LabelFor(model => model.CreateTime, new { @class = "control-label col-md-4" })
+                <div class="col-md-8">
+                    @Html.DisplayFor(model => model.CreateTime)
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row">
+
+        <div class="col-md-6">
+            <div class="form-group">
+                @Html.LabelFor(model => model.CreatePerson, new { @class = "control-label col-md-4" })
+                <div class="col-md-8">
+                    @Html.DisplayFor(model => model.CreatePerson)
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="row">
+
+        <div class="col-md-12">
+            <div class="form-group">
+                @Html.LabelFor(model => model.Remark, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DisplayFor(model => model.Remark)
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+<script type="text/javascript">
+    $(function () {
+        var pic = $("#HDpic").val();
+        if (pic == '') {
+            $("#showPic").attr("src", "/Images/noPic.jpg")
+        } else {
+            $("#showPic").attr("src", pic);//显示头像图片
+        }        
+    });
+</script>

@@ -22,6 +22,7 @@
     <IISExpressUseClassicPipelineMode />
     <TargetFrameworkProfile />
     <UseGlobalApplicationHostFile />
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -1889,6 +1890,7 @@
     <Content Include="Views\SysMessage\Index.cshtml" />
     <Content Include="Views\SysRole\SetSysMenu.cshtml" />
     <Content Include="Views\Home\Index2.cshtml" />
+    <Content Include="Views\SysPerson\IndexSef.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BLL\BLL.csproj">
