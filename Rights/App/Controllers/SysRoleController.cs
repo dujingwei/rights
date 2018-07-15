@@ -48,11 +48,11 @@ namespace Langben.App.Controllers
         /// <param name="search">查询条件</param>
         /// <returns></returns>
         [HttpPost]
-        public JsonResult GetData(string id, int page, int rows, string order, string sort, string search)
+        public JsonResult GetData()
         {
 
             int total = 0;
-            List<SysRole> queryData = m_BLL.GetByParam(id, page, rows, order, sort, search, ref total);
+            List<SysRole> queryData = m_BLL.GetByParam(null, 1, 99, "desc", "Id", null, ref total);
             return Json(new datagrid
             {
                 total = total,

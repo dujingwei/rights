@@ -268,6 +268,7 @@
     <Content Include="assets\admin\layout\scripts\quick-sidebar.js" />
     <Content Include="assets\global\css\components-rounded.css" />
     <Content Include="assets\global\css\components.css" />
+    <Content Include="assets\global\css\ace.min.css" />
     <Content Include="assets\global\css\plugins.css" />
     <Content Include="assets\global\img\accordion-plusminus.png" />
     <Content Include="assets\global\img\ajax-loading.gif" />
@@ -1891,6 +1892,8 @@
     <Content Include="Views\SysRole\SetSysMenu.cshtml" />
     <Content Include="Views\Home\Index2.cshtml" />
     <Content Include="Views\SysPerson\IndexSef.cshtml" />
+    <Content Include="Views\SysRole\Index - 复制.cshtml" />
+    <Content Include="Views\SysDepartment\Index - 复制.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BLL\BLL.csproj">
