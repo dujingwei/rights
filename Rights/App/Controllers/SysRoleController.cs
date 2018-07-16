@@ -26,8 +26,9 @@ namespace Langben.App.Controllers
         [SupportFilter]
         public ActionResult Index()
         {
-        
-            return View();
+            int total = 0;
+            List<SysRole> queryData = m_BLL.GetByParam(null, 1, 99, "desc", "Id", null, ref total);
+            return View(queryData);
         }
          /// <summary>
         /// 列表
@@ -48,11 +49,12 @@ namespace Langben.App.Controllers
         /// <param name="search">查询条件</param>
         /// <returns></returns>
         [HttpPost]
-        public JsonResult GetData()
+        public ActionResult GetData()
         {
 
             int total = 0;
             List<SysRole> queryData = m_BLL.GetByParam(null, 1, 99, "desc", "Id", null, ref total);
+           
             return Json(new datagrid
             {
                 total = total,

@@ -1,31 +1,86 @@
-﻿<div class="sys-person">
+﻿@model List<Langben.DAL.SysRole>
+ 
+@using Models
+
+
+<div class="sys-person">
     <div class="row">
         <div class="col-md-1">
-            <button onclick="" class="btn btn-primary"><i class="icon-plus"></i> 创建</button>
+            <button data-toggle="modal" data-target="#createRole" class="btn btn-primary"><i class="icon-plus"></i> 创建</button>
+        </div>
+    </div>
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    <div class="panel-body">
+                        <div class="panel-item">
+                            <strong class="col-md-4">名称：</strong>
+                            <div class="col-md-8">@item.Name</div>
+                        </div>
+                        <div class="panel-item">
+                            <strong class="col-md-4">描述：</strong>
+                            <div class="col-md-8 panel-desc">@item.Description</div>
+                        </div>
+                        <div class="panel-item">
+                            <strong class="col-md-4">人员：</strong>
+                            <div class="col-md-8 panel-person">@item.SysPersonId</div>
+                        </div>
+                    </div>
+                    <div class="panel-footer flex-justify">
+                        <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#authorize">分配权限</button>
+                        <button class="btn btn-primary btn-sm">修改</button>
+                        <button class="btn btn-danger btn-sm">删除</button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="modal fade" id="createRole">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title">创建</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label no-padding-right">名称：</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label no-padding-right">描述：</label>
+                            <div class="col-sm-10">
+                                <textarea type="text" class="form-control" rows="3"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success">保存</button>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-md-4">
-            <div class="panel panel-info">
-                <div class="panel-body">
-                    <div class="panel-item">
-                        <strong class="col-md-4">名称：</strong>
-                        <div class="col-md-8">系统管理员</div>
-                    </div>
-                    <div class="panel-item">
-                        <strong class="col-md-4">描述：</strong>
-                        <div class="col-md-8 panel-desc">具有全部的菜单和操作</div>
-                    </div>
-                    <div class="panel-item">
-                        <strong class="col-md-4">人员：</strong>
-                        <div class="col-md-8 panel-person">Admin</div>
-                    </div>
+
+    <div class="modal fade" id="authorize">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title">创建</h4>
                 </div>
-                <div class="panel-footer flex-justify">
-                    <button class="btn btn-primary btn-sm">分配权限</button>
-                    <button class="btn btn-primary btn-sm">修改</button>
-                    <button class="btn btn-danger btn-sm">删除</button>
+                <div class="modal-body">
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success">保存</button>
                 </div>
             </div>
         </div>
@@ -36,25 +91,36 @@
     .sys-person .row {
         margin: 20px;
     }
+
     .sys-person .panel-item {
         padding: 5px;
         overflow: hidden;
     }
+
     .sys-person .panel-footer {
         overflow: hidden;
     }
+
     .sys-person .panel-desc {
         min-height: 60px;
     }
+
     .sys-person .panel-person {
         min-height: 80px;
     }
+
     .flex-justify {
         display: -webkit-box;
         display: -webkit-flex;
         display: flex;
         -webkit-justify-content: space-around;
         justify-content: space-around;
+    }
+    .no-padding-right {
+        padding-right: 0 !important;
+    }
+    .modal .form-group:last-child {
+        margin-bottom: 0;
     }
 </style>
 
