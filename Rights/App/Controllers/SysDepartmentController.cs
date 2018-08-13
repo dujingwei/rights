@@ -10,6 +10,7 @@ using Common;
 using Langben.DAL;
 using Langben.BLL;
 using Langben.App.Models;
+using System.Web.Script.Serialization;
 
 namespace Langben.App.Controllers
 {
@@ -26,10 +27,10 @@ namespace Langben.App.Controllers
         [SupportFilter]
         public ActionResult Index()
         {
-        
+
             return View();
         }
-         /// <summary>
+        /// <summary>
         /// 列表
         /// </summary>
         /// <returns></returns>
@@ -59,16 +60,21 @@ namespace Langben.App.Controllers
                 rows = queryData.Select(s => new
                 {
                     Id = s.Id
-					,Name = s.Name
-					,ParentId = s.ParentId
-					,Address = s.Address
-					,Sort = s.Sort
-					,Remark = s.Remark
+                    ,
+                    Name = s.Name
+                    ,
+                    ParentId = s.ParentId
+                    ,
+                    Address = s.Address
+                    ,
+                    Sort = s.Sort
+                    ,
+                    Remark = s.Remark
                     //,CreateTime = s.CreateTime
                     //,CreatePerson = s.CreatePerson
                     //,UpdateTime = s.UpdateTime
                     //,UpdatePerson = s.UpdatePerson
-					
+
                 }
 
                     )
@@ -85,30 +91,30 @@ namespace Langben.App.Controllers
             string[] titles = title.Split(',');//如果确定显示的名称，可以直接定义
             string[] fields = field.Split(',');
             List<SysDepartment> queryData = m_BLL.GetByParam(id, sortOrder, sortName, search);
-             
-            return Content(WriteExcle(titles, fields, queryData.ToArray()));  
+
+            return Content(WriteExcle(titles, fields, queryData.ToArray()));
         }
         /// <summary>
         /// 查看详细
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [SupportFilter]  
+        [SupportFilter]
         public ActionResult Details(string id)
         {
             SysDepartment item = m_BLL.GetById(id);
             return View(item);
 
         }
- 
+
         /// <summary>
         /// 首次创建
         /// </summary>
         /// <returns></returns>
         [SupportFilter]
         public ActionResult Create(string id)
-        { 
-            
+        {
+
             return View();
         }
         /// <summary>
@@ -119,23 +125,23 @@ namespace Langben.App.Controllers
         [HttpPost]
         [SupportFilter]
         public ActionResult Create(SysDepartment entity)
-        {           
+        {
             if (entity != null && ModelState.IsValid)
             {
                 string currentPerson = GetCurrentPerson();
                 entity.CreateTime = DateTime.Now;
                 entity.CreatePerson = currentPerson;
-              
-                entity.Id = Result.GetNewId();   
+
+                entity.Id = Result.GetNewId();
                 string returnValue = string.Empty;
                 if (m_BLL.Create(ref validationErrors, entity))
                 {
-                    LogClassModels.WriteServiceLog(Suggestion.InsertSucceed  + "，部门的信息的Id为" + entity.Id,"部门"
+                    LogClassModels.WriteServiceLog(Suggestion.InsertSucceed + "，部门的信息的Id为" + entity.Id, "部门"
                         );//写入日志 
                     return Json(Suggestion.InsertSucceed);
                 }
                 else
-                { 
+                {
                     if (validationErrors != null && validationErrors.Count > 0)
                     {
                         validationErrors.All(a =>
@@ -144,9 +150,9 @@ namespace Langben.App.Controllers
                             return true;
                         });
                     }
-                    LogClassModels.WriteServiceLog(Suggestion.InsertFail + "，部门的信息，" + returnValue,"部门"
+                    LogClassModels.WriteServiceLog(Suggestion.InsertFail + "，部门的信息，" + returnValue, "部门"
                         );//写入日志                      
-                    return Json(Suggestion.InsertFail  + returnValue); //提示插入失败
+                    return Json(Suggestion.InsertFail + returnValue); //提示插入失败
                 }
             }
 
@@ -157,7 +163,7 @@ namespace Langben.App.Controllers
         /// </summary>
         /// <param name="id">主键</param>
         /// <returns></returns> 
-        [SupportFilter] 
+        [SupportFilter]
         public ActionResult Edit(string id)
         {
             SysDepartment item = m_BLL.GetById(id);
@@ -175,20 +181,20 @@ namespace Langben.App.Controllers
         {
             if (entity != null && ModelState.IsValid)
             {   //数据校验
-            
-                string currentPerson = GetCurrentPerson();                 
+
+                string currentPerson = GetCurrentPerson();
                 entity.UpdateTime = DateTime.Now;
                 entity.UpdatePerson = currentPerson;
-                           
-                string returnValue = string.Empty;   
+
+                string returnValue = string.Empty;
                 if (m_BLL.Edit(ref validationErrors, entity))
                 {
-                    LogClassModels.WriteServiceLog(Suggestion.UpdateSucceed + "，部门信息的Id为" + id,"部门"
+                    LogClassModels.WriteServiceLog(Suggestion.UpdateSucceed + "，部门信息的Id为" + id, "部门"
                         );//写入日志                           
                     return Json(Suggestion.UpdateSucceed); //提示更新成功 
                 }
                 else
-                { 
+                {
                     if (validationErrors != null && validationErrors.Count > 0)
                     {
                         validationErrors.All(a =>
@@ -199,11 +205,11 @@ namespace Langben.App.Controllers
                     }
                     LogClassModels.WriteServiceLog(Suggestion.UpdateFail + "，部门信息的Id为" + id + "," + returnValue, "部门"
                         );//写入日志                           
-                    return Json(Suggestion.UpdateFail  + returnValue); //提示更新失败
+                    return Json(Suggestion.UpdateFail + returnValue); //提示更新失败
                 }
             }
             return Json(Suggestion.UpdateFail + "请核对输入的数据的格式"); //提示输入的数据的格式不对               
-          
+
         }
         /// <summary>
         /// 删除
@@ -216,7 +222,7 @@ namespace Langben.App.Controllers
             string returnValue = string.Empty;
             string[] deleteId = collection["query"].GetString().Split(',');
             if (deleteId != null && deleteId.Length > 0)
-            { 
+            {
                 if (m_BLL.DeleteCollection(ref validationErrors, deleteId))
                 {
                     LogClassModels.WriteServiceLog(Suggestion.DeleteSucceed + "，信息的Id为" + string.Join(",", deleteId), "消息"
@@ -233,13 +239,13 @@ namespace Langben.App.Controllers
                             return true;
                         });
                     }
-                    LogClassModels.WriteServiceLog(Suggestion.DeleteFail + "，信息的Id为" + string.Join(",", deleteId)+ "," + returnValue, "消息"
+                    LogClassModels.WriteServiceLog(Suggestion.DeleteFail + "，信息的Id为" + string.Join(",", deleteId) + "," + returnValue, "消息"
                         );//删除失败，写入日志
                 }
             }
             return Json(returnValue);
         }
-     
+
         IBLL.ISysDepartmentBLL m_BLL;
 
         ValidationErrors validationErrors = new ValidationErrors();
@@ -251,7 +257,7 @@ namespace Langben.App.Controllers
         {
             m_BLL = bll;
         }
-        
+
         /// <summary>
         /// 获取树形列表的数据
         /// </summary>
@@ -268,18 +274,28 @@ namespace Langben.App.Controllers
                     rows = rows.Select(s =>
                         new
                         {
-                          Id = s.Id
-					,Name = s.Name
-					,_parentId =   s.ParentId
-					,state = s.SysDepartment1.Any(a => a.ParentId == s.Id) ? "closed" : null
-					,Address = s.Address
-					,Sort = s.Sort
-					,Remark = s.Remark
-					,CreateTime = s.CreateTime
-					,CreatePerson = s.CreatePerson
-					,UpdateTime = s.UpdateTime
-					,UpdatePerson = s.UpdatePerson
-					
+                            Id = s.Id
+                    ,
+                            Name = s.Name
+                    ,
+                            _parentId = s.ParentId
+                    ,
+                            state = s.SysDepartment1.Any(a => a.ParentId == s.Id) ? "closed" : null
+                    ,
+                            Address = s.Address
+                    ,
+                            Sort = s.Sort
+                    ,
+                            Remark = s.Remark
+                    ,
+                            CreateTime = s.CreateTime
+                    ,
+                            CreatePerson = s.CreatePerson
+                    ,
+                            UpdateTime = s.UpdateTime
+                    ,
+                            UpdatePerson = s.UpdatePerson
+
                         }
                         ).OrderBy(o => o.Id)
                 });
@@ -287,7 +303,7 @@ namespace Langben.App.Controllers
             return Content("[]");
         }
 
- 
+
 
         [HttpPost]
         public ActionResult GetAllMetadata2(string id)
@@ -324,7 +340,80 @@ namespace Langben.App.Controllers
             return Json(rows, JsonRequestBehavior.AllowGet);
 
         }
+
+        [HttpPost]
+        public ActionResult GetTree()
+        {
+            //var sysDepartments = m_BLL.GetAll().Where(m => m.ParentId == null);
+            //return Json(new treegrid
+            //{
+            //    rows = sysDepartments.Select(s =>
+            //        new
+            //        {
+            //            id = s.Id
+            //    ,
+            //            name = "部门"
+            //    ,
+            //            title = s.Name
+            //    ,
+            //            num = s.SysPerson.Count().ToString(),
+            //            totalNum = "10",
+            //            flag = "0",
+
+            //            children = s.SysDepartment1.Any(a => a.ParentId == s.Id) ? s.SysDepartment1 : null
+
+            //        }
+            //            ).OrderBy(o => o.id)
+            //});
+            List<SysDepartment> sysDepartments = m_BLL.GetAll().Where(m => m.ParentId == null).ToList();
+            if (sysDepartments.Any())
+            {
+                List<DataList> dataList = new List<DataList>();
+                dataList = Datajson(sysDepartments, null);
+                List<DataList> Datajson(List<SysDepartment> sys, string id)
+                {
+                    if (id != null)
+                    {
+                        List<DataList> dataListe = new List<DataList>();
+                        foreach (SysDepartment item in sys)
+                        {
+                            dataListe.Add(new DataList()
+                            {
+                                id = item.Id,
+                                name = "部门",
+                                title = item.Name,
+                                num = item.SysPerson.Count().ToString(),
+                                children = item.SysDepartment1.Any(a => a.ParentId == item.Id) ? Datajson(item.SysDepartment1.ToList(), item.Id) : null
+                            });
+                        }
+                        return dataListe;
+                    }
+                    else
+                    {
+                        foreach (SysDepartment item in sys)
+                        {
+                            dataList.Add(new DataList()
+                            {
+                                id = item.Id,
+                                name = "部门",
+                                title = item.Name,
+                                num = item.SysPerson.Count().ToString(),
+                                children = item.SysDepartment1.Any(a => a.ParentId == item.Id) ? Datajson(item.SysDepartment1.ToList(), item.Id) : null
+                            });
+                        }
+                    }
+                    return dataList;
+                }
+
+                JavaScriptSerializer js = new JavaScriptSerializer();
+                //ViewBag.Jsons = js.Serialize(dataList).TrimStart('[').TrimEnd(']'); //序列化
+                return Json(dataList);
+            }
+            return null;
+        }
     }
+
+
 }
 
 

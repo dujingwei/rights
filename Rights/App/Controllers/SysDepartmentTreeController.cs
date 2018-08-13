@@ -24,7 +24,7 @@ namespace Langben.App.Controllers
         /// <returns></returns>
         public ActionResult GetTree()
         {
-            List<SystemTree> listSystemTree = new List<SystemTree>();
+            List<DataList> listSystemTree = new List<DataList>();
             
             IBLL.ISysDepartmentBLL db = new SysDepartmentBLL();
          

@@ -1,102 +1,175 @@
-﻿<div class="col-md-12">
-    <div class="dd" id="nestable">
-        <ol class="dd-list">
-            <li class="dd-item" data-id="1">
-                <div class="dd2-content">
-                    <div class="col-md-2">市场部</div>
-                    <div class="col-md-3">北京市朝阳区</div>
-                    <div class="col-md-3">111</div>
-                    <div class="action-buttons col-md-3 text-right">
-                        <a class="blue">
-                            <i class="ace-icion fa fa-pencil bigger-130"></i>
-                        </a>
-                        <a class="red">
-                            <i class="ace-icion fa fa-trash-o bigger-130"></i>
-                        </a>
-                    </div>
-                </div>
-            </li>
-            <li class="dd-item" data-id="1">
-                <div class="dd2-content">
-                    <div class="col-md-2">财务部</div>
-                    <div class="col-md-3">北京市朝阳区</div>
-                    <div class="col-md-3">222</div>
-                    <div class="action-buttons col-md-3 text-right">
-                        <a class="blue">
-                            <i class="ace-icion fa fa-pencil bigger-130"></i>
-                        </a>
-                        <a class="red">
-                            <i class="ace-icion fa fa-trash-o bigger-130"></i>
-                        </a>
-                    </div>
-                </div>
-            </li>
-            <li class="dd-item" data-id="1">
-                <div class="dd2-content">
-                    <div class="col-md-2">人力部</div>
-                    <div class="col-md-3">北京市朝阳区</div>
-                    <div class="col-md-3">333</div>
-                    <div class="action-buttons col-md-3 text-right">
-                        <a class="blue">
-                            <i class="ace-icion fa fa-pencil bigger-130"></i>
-                        </a>
-                        <a class="red">
-                            <i class="ace-icion fa fa-trash-o bigger-130"></i>
-                        </a>
-                    </div>
-                </div>
-                <ol class="dd-list">
-                    <li class="dd-item" data-id="1">
-                        <div class="dd2-content">
-                            <div class="col-md-3">规划</div>
-                            <div class="col-md-3">北京市朝阳区</div>
-                            <div class="col-md-3">111</div>
-                            <div class="action-buttons col-md-3 text-right">
-                                <a class="blue">
-                                    <i class="ace-icion fa fa-pencil bigger-130"></i>
-                                </a>
-                                <a class="red">
-                                    <i class="ace-icion fa fa-trash-o bigger-130"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="dd-item" data-id="1">
-                        <div class="dd2-content">
-                            <div class="col-md-3">招聘</div>
-                            <div class="col-md-3">北京市朝阳区</div>
-                            <div class="col-md-3">222</div>
-                            <div class=" action-buttons col-md-3 text-right">
-                                <a class="blue">
-                                    <i class="ace-icion fa fa-pencil bigger-130"></i>
-                                </a>
-                                <a class="red">
-                                    <i class="ace-icion fa fa-trash-o bigger-130"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </li>
-                </ol>
-            </li>
-        </ol>
+﻿
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>部门管理</title>
+    <link href="~/Content/font-awesome.min.css" rel="stylesheet" />
+    <link href="~/Content/jquery.orgchart.css" rel="stylesheet" />
+    <link href="~/Content/style.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery.min.js"></script>
+    <script src="~/Scripts/html2canvas.min.js"></script>
+    <script src="~/Scripts/jquery.orgchart.js"></script>
+    @*<script src="~/Scripts/scripts.js"></script>*@
+</head>
+
+<body>
+    <!--创建按钮-->
+    <button class="create-btn">创建</button>
+    <div id="chart-container"></div>
+    <!--放大缩小功能按钮-->
+    <div class="scale-box">
+        <span class="raise-scale-btn">－</span>
+        <span class="scale-percent"><span id="num">100</span>%</span>
+        <span class="reduce-scale-btn">＋</span>
+        <span class="reset-scale-btn">重置</span>
     </div>
-</div>
+    <!--弹框-->
+    <div class="mask">
+        <ul class="pop-box">
+            <li class="pop-title">
+                <span>编辑修改</span>
+                <span class="close">×</span>
+            </li>
+            <li>
+                <b style="color: red;">*</b>
+                <span>部门名称</span>
+                <input type="text" name="port_name" id="port_name" placeholder="1-50个字符" />
+            </li>
+            <li>
+                <b style="color: red;">*</b>
+                <span>部门编码</span>
+                <input type="text" name="port_num" id="port_num" placeholder="1-50个字符" />
+            </li>
+            <li style="">
+                <b style="color: red;">*</b>
+                <span>部门类别</span>
+                <select style="" id="port_cate" class="port_cate" name="port_cate">
+                    <option value="请选择部门">请选择部门</option>
+                    <option value="一级部门">一级部门</option>
+                    <option value="二级部门">二级部门</option>
+                    <option value="三级部门">三级部门</option>
+                    <option value="四级部门">四级部门</option>
+                </select>
+            </li>
+            <li>
+                <b style="color: red;opacity: 0;">*</b>
+                <span>部门负责人</span>
+                <input type="text" name="port_person" id="port_person" placeholder="1-50个字符" />
+            </li>
+            <li>
+                <b style="color: red;opacity: 0;">*</b>
+                <span>部门城市</span>
+                <input type="text" name="port_city" id="port_city" placeholder="1-50个字符" />
+            </li>
+            <li>
+                <b style="color: red;opacity: 0;">*</b>
+                <span style="position: relative;top: -30px;">部门说明书</span>
+                <textarea name="port_option" class="port_option" placeholder="1-300个字符"></textarea>
+            </li>
+            <li class="btns">
+                <button id="btn-sure" style="background: #29b2a6;color: #fff;margin-left: 80px;">修&nbsp;改</button>
+                <button id="btn-cancle">取&nbsp;消</button>
+                <button id="btn-del">删&nbsp;除</button>
+            </li>
+        </ul>
+    </div>
 
-<style>
-    .action-buttons {
-        position: absolute;
-        top: 10px;
-        right: -5px;
-    }
-</style>
-<link href="/assets/global/css/ace.min.css" rel="stylesheet" type="text/css" />
-<script src="/assets/global/plugins/jquery-nestable/jquery.nestable.js"></script>
-<script>
-    $(function () {
-        $('.dd').nestable();
+    <script type="text/javascript">
+        $(function () {
+            var datascource = { "children": [{ "children": null, "id": "1307311605187265267d33f281237", "name": "部门", "title": "规划", "num": "0", "totalNum": "10", "flag": "0" }, { "children": null, "id": "1307311605187265267d33f281238", "name": "部门", "title": "招聘", "num": "0", "totalNum": "10", "flag": "0" }], "id": "1307311605187265267d33f281236", "name": "部门", "title": "人力部", "num": "0", "totalNum": "10", "flag": "0" };
+            var s = null;
+            $.ajax({
+                url: "/SysDepartment/GetTree",
+                type: "Post",
+                data: $(this).serialize(),
+                dataType: "json",
+                success: function (data) {
+                    s = JSON.stringify(data);
+                    s = s.substring(1, s.length)
+                    s = s.substring(0, s.length - 1);
+                }
+            })
+            $('#chart-container').orgchart({
+                'data': JSON.stringify(s),
+                'depth': 9,
+                'nodeContent': 'title',
+                'nodeID': 'id',
+                'exportButton': true,
+                'exportFilename': 'Chart',
+                'parentNodeSymbol': 'fa-th-large',
+                'createNode': function ($node, data) {
 
-        $('.dd-handle a').on('mousedown', function (e) {
-            e.stopPropagation();
+                    $node.on('click', function (event) {
+
+                        if (!$(event.target).is('.edge')) {
+                            $('#selected-node').val(data.name).data('node', $node);
+                        }
+                    });
+                    var html = `<span class="edit">编辑</span>
+                                      <div class="admin-head no-admin"><span>`+ data.num + `</span></div>
+                                      <div class="department-detail">
+                                        <div id="title" title="IT" class="department-name text-overflow-hidden">`+ data.name + `</div>
+                                        <div class="admin-info node-content padding-top-10">
+                                          <span title="" class="admin-name text-overflow-hidden name-width">`+ data.title + `</span>
+                                        </div>
+                                        <div title="正式人数/非正式人数" class="people-num node-content">人数：`+ data.num + `（` + data.num + `／` + data.totalNum + `）</div>
+                                      </div>`;
+                    $node.children('.content').html(html);
+                    var parentComhtml = '<span class="icon depart-mark icon-fenzigongsi">子公司</span>';
+                    if (data.flag == '1') {
+                        $node.children('.content').children(".edit").before(parentComhtml);
+                    }
+                }
+            })
+                .on('click', '.orgchart', function (event) {
+                    if (!$(event.target).closest('.node').length) {
+                        $('#selected-node').val('');
+                    }
+                });
+
+            var num = 1, percent = 100;
+            //缩小
+            $(".raise-scale-btn").on('click', function () {
+                num -= 0.1;
+                percent -= 10;
+                $(".orgchart").css("transform", "scale(" + num + ")");
+                $("#num").html(percent);
+                return num, percent;
+            });
+            //放大
+            $(".reduce-scale-btn").on('click', function () {
+                num += 0.1;
+                percent += 10;
+                console.log(num);
+                $(".orgchart").css("transform", "scale(" + num + ")");
+                $("#num").html(percent);
+                return num, percent;
+            });
+            //重置
+            $(".reset-scale-btn").on('click', function () {
+                $(".orgchart").css("transform", "scale(1)");
+                $("#num").html(100);
+                return num = 1, percent = 100;
+            });
+            $(".create-btn").on('click', function () {
+                $(".mask").css("display", "block");
+            });
+            $(".edit").on('click', function () {
+                $(".mask").css("display", "block");
+            });
+            $("#btn-cancle").on('click', function () {
+                $(".mask").css("display", "none");
+            });
+            $(".close").on('click', function () {
+                $(".mask").css("display", "none");
+            });
         });
-    })
-</script>
+    </script>
+</body>
+
+</html>
