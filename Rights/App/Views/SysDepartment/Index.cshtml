@@ -44,6 +44,7 @@
                 <b style="color: red;">*</b>
                 <span>部门编码</span>
                 <input type="text" name="port_num" id="port_num" placeholder="1-50个字符" />
+
             </li>
             <li style="">
                 <b style="color: red;">*</b>
@@ -78,59 +79,67 @@
             </li>
         </ul>
     </div>
-
+    <input hidden id="ids" value="" />
     <script type="text/javascript">
         $(function () {
-            var datascource = { "children": [{ "children": null, "id": "1307311605187265267d33f281237", "name": "部门", "title": "规划", "num": "0", "totalNum": "10", "flag": "0" }, { "children": null, "id": "1307311605187265267d33f281238", "name": "部门", "title": "招聘", "num": "0", "totalNum": "10", "flag": "0" }], "id": "1307311605187265267d33f281236", "name": "部门", "title": "人力部", "num": "0", "totalNum": "10", "flag": "0" };
-            var s = null;
             $.ajax({
                 url: "/SysDepartment/GetTree",
                 type: "Post",
-                data: $(this).serialize(),
+                //data: $(this).serialize(),
                 dataType: "json",
                 success: function (data) {
-                    s = JSON.stringify(data);
-                    s = s.substring(1, s.length)
-                    s = s.substring(0, s.length - 1);
-                }
-            })
-            $('#chart-container').orgchart({
-                'data': JSON.stringify(s),
-                'depth': 9,
-                'nodeContent': 'title',
-                'nodeID': 'id',
-                'exportButton': true,
-                'exportFilename': 'Chart',
-                'parentNodeSymbol': 'fa-th-large',
-                'createNode': function ($node, data) {
-
-                    $node.on('click', function (event) {
-
-                        if (!$(event.target).is('.edge')) {
-                            $('#selected-node').val(data.name).data('node', $node);
+                    $('#chart-container').orgchart({
+                        'data': data,
+                        'depth': 9,
+                        'nodeContent': 'title',
+                        'nodeID': 'id',
+                        'exportButton': true,
+                        'exportFilename': 'Chart',
+                        'parentNodeSymbol': 'fa-th-large',
+                        'createNode': function ($node, data) {
+                            $node.on('click', function (event) {
+                                if (!$(event.target).is('.edge')) {
+                                    $('#selected-node').val(data.name).data('node', $node);
+                                    $("#ids").val(data.id);
+                                }
+                            });
+                            var html = `<span class="edit">编辑</span>
+                                                              <div class="admin-head no-admin"><span>`+ data.num + `</span></div>
+                                                              <div class="department-detail">
+                                                               <div id="title" title="IT" class="department-name text-overflow-hidden">`+ data.name + `</div>
+                                                                <div class="admin-info node-content padding-top-10">
+                                                                  <span title="" class="admin-name text-overflow-hidden name-width">`+ data.title + `</span>
+                                                                </div>
+                                                                <div title="正式人数/非正式人数" class="people-num node-content">人数：`+ data.num + `（` + data.num + `／` + data.totalNum + `）</div>
+                                                              </div>`;
+                            $node.children('.content').html(html);
+                            var parentComhtml = '<span class="icon depart-mark icon-fenzigongsi">子公司</span>';
+                            if (data.flag == '1') {
+                                $node.children('.content').children(".edit").before(parentComhtml);
+                            }
+                        }
+                    }).on('click', '.orgchart', function (event) {
+                        if (!$(event.target).closest('.node').length) {
+                            $('#selected-node').val('');
                         }
                     });
-                    var html = `<span class="edit">编辑</span>
-                                      <div class="admin-head no-admin"><span>`+ data.num + `</span></div>
-                                      <div class="department-detail">
-                                        <div id="title" title="IT" class="department-name text-overflow-hidden">`+ data.name + `</div>
-                                        <div class="admin-info node-content padding-top-10">
-                                          <span title="" class="admin-name text-overflow-hidden name-width">`+ data.title + `</span>
-                                        </div>
-                                        <div title="正式人数/非正式人数" class="people-num node-content">人数：`+ data.num + `（` + data.num + `／` + data.totalNum + `）</div>
-                                      </div>`;
-                    $node.children('.content').html(html);
-                    var parentComhtml = '<span class="icon depart-mark icon-fenzigongsi">子公司</span>';
-                    if (data.flag == '1') {
-                        $node.children('.content').children(".edit").before(parentComhtml);
-                    }
+                    //编辑
+                    $(".edit").on('click', function () {
+                        $.ajax({
+                            url: "/SysDepartment/UpdateTree/" + $("#ids").val(),
+                            type: "Post",
+                            //data: $(this).serialize(),
+                            dataType: "json",
+                            success: function (data) {
+                                $("#port_name").val(data.rows.Name);
+                                $(".mask").css("display", "block");
+                            }
+                        })
+                    });
                 }
+
             })
-                .on('click', '.orgchart', function (event) {
-                    if (!$(event.target).closest('.node').length) {
-                        $('#selected-node').val('');
-                    }
-                });
+
 
             var num = 1, percent = 100;
             //缩小
@@ -156,12 +165,11 @@
                 $("#num").html(100);
                 return num = 1, percent = 100;
             });
+            //创建
             $(".create-btn").on('click', function () {
                 $(".mask").css("display", "block");
             });
-            $(".edit").on('click', function () {
-                $(".mask").css("display", "block");
-            });
+
             $("#btn-cancle").on('click', function () {
                 $(".mask").css("display", "none");
             });

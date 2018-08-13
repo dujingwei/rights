@@ -340,76 +340,86 @@ namespace Langben.App.Controllers
             return Json(rows, JsonRequestBehavior.AllowGet);
 
         }
-
+        /// <summary>
+        /// 绑定树结构
+        /// </summary>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult GetTree()
         {
-            //var sysDepartments = m_BLL.GetAll().Where(m => m.ParentId == null);
-            //return Json(new treegrid
-            //{
-            //    rows = sysDepartments.Select(s =>
-            //        new
-            //        {
-            //            id = s.Id
-            //    ,
-            //            name = "部门"
-            //    ,
-            //            title = s.Name
-            //    ,
-            //            num = s.SysPerson.Count().ToString(),
-            //            totalNum = "10",
-            //            flag = "0",
-
-            //            children = s.SysDepartment1.Any(a => a.ParentId == s.Id) ? s.SysDepartment1 : null
-
-            //        }
-            //            ).OrderBy(o => o.id)
-            //});
-            List<SysDepartment> sysDepartments = m_BLL.GetAll().Where(m => m.ParentId == null).ToList();
-            if (sysDepartments.Any())
+            SysDepartment sysDepartments = m_BLL.GetAll().Where(m => m.ParentId == null).FirstOrDefault();
+            if (sysDepartments != null)
             {
-                List<DataList> dataList = new List<DataList>();
-                dataList = Datajson(sysDepartments, null);
-                List<DataList> Datajson(List<SysDepartment> sys, string id)
-                {
-                    if (id != null)
-                    {
-                        List<DataList> dataListe = new List<DataList>();
-                        foreach (SysDepartment item in sys)
-                        {
-                            dataListe.Add(new DataList()
-                            {
-                                id = item.Id,
-                                name = "部门",
-                                title = item.Name,
-                                num = item.SysPerson.Count().ToString(),
-                                children = item.SysDepartment1.Any(a => a.ParentId == item.Id) ? Datajson(item.SysDepartment1.ToList(), item.Id) : null
-                            });
-                        }
-                        return dataListe;
-                    }
-                    else
-                    {
-                        foreach (SysDepartment item in sys)
-                        {
-                            dataList.Add(new DataList()
-                            {
-                                id = item.Id,
-                                name = "部门",
-                                title = item.Name,
-                                num = item.SysPerson.Count().ToString(),
-                                children = item.SysDepartment1.Any(a => a.ParentId == item.Id) ? Datajson(item.SysDepartment1.ToList(), item.Id) : null
-                            });
-                        }
-                    }
-                    return dataList;
-                }
+                DataList dataList = new DataList();
+                dataList.id = sysDepartments.Id;
+                dataList.name = "部门";
+                dataList.title = sysDepartments.Name;
+                dataList.num = sysDepartments.SysPerson.Count().ToString();
+                dataList.children = sysDepartments.SysDepartment1.Any(a => a.ParentId == sysDepartments.Id) ? Datajson(sysDepartments.SysDepartment1.ToList()) : null;
 
-                JavaScriptSerializer js = new JavaScriptSerializer();
-                //ViewBag.Jsons = js.Serialize(dataList).TrimStart('[').TrimEnd(']'); //序列化
                 return Json(dataList);
             }
             return null;
+        }
+        /// <summary>
+        /// 递归获取树
+        /// </summary>
+        /// <param name="sys"></param>
+        /// <returns></returns>
+        public List<DataList> Datajson(List<SysDepartment> sys)
+        {
+            List<DataList> datas = new List<DataList>();
+            foreach (SysDepartment item in sys)
+            {
+                datas.Add(new DataList()
+                {
+                    id = item.Id,
+                    name = "部门",
+                    title = item.Name,
+                    num = item.SysPerson.Count().ToString(),
+                    children = item.SysDepartment1.Any(a => a.ParentId == item.Id) ? Datajson(item.SysDepartment1.ToList()) : null
+                });
+            }
+            return datas;
+        }
+        /// <summary>
+        /// 首次编辑
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult UpdateTree(string id)
+        {
+            SysDepartment sysDepartment = m_BLL.GetById(id);
+            if (sysDepartment == null)
+            {
+                return null;
+            }
+            List<DataList> departments = sysDepartment.SysDepartment1.Any(a => a.ParentId == sysDepartment.Id) ? Datajson(sysDepartment.SysDepartment1.ToList()) : null;
+            return Json(new treegrid
+            {
+                rows = new SysDepartment
+                {
+                    Id = sysDepartment.Id
+                ,
+                    Name = sysDepartment.Name
+                ,
+                    ParentId = sysDepartment.ParentId
+,
+                    Address = sysDepartment.Address
+                ,
+                    Sort = sysDepartment.Sort
+                ,
+                    Remark = sysDepartment.Remark
+                ,
+                    CreateTime = sysDepartment.CreateTime
+                ,
+                    CreatePerson = sysDepartment.CreatePerson
+                ,
+                    UpdateTime = sysDepartment.UpdateTime
+                ,
+                    UpdatePerson = sysDepartment.UpdatePerson
+                }
+            });
         }
     }
 
