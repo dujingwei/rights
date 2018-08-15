@@ -32,7 +32,7 @@
     <div class="mask">
         <ul class="pop-box">
             <li class="pop-title">
-                <span>编辑修改</span>
+                <span id="texts">编辑修改</span>
                 <span class="close">×</span>
             </li>
             <li>
@@ -42,105 +42,43 @@
             </li>
             <li>
                 <b style="color: red;">*</b>
-                <span>部门编码</span>
-                <input type="text" name="port_num" id="port_num" placeholder="1-50个字符" />
+                <span>部门地址</span>
+                <input type="text" name="port_num" id="port_Address" placeholder="1-50个字符" />
 
             </li>
             <li style="">
                 <b style="color: red;">*</b>
-                <span>部门类别</span>
-                <select style="" id="port_cate" class="port_cate" name="port_cate">
-                    <option value="请选择部门">请选择部门</option>
-                    <option value="一级部门">一级部门</option>
-                    <option value="二级部门">二级部门</option>
-                    <option value="三级部门">三级部门</option>
-                    <option value="四级部门">四级部门</option>
-                </select>
+                <span>部门</span>
+                <select style="" id="port_cate" class="port_cate" name="port_cate"></select>
             </li>
-            <li>
-                <b style="color: red;opacity: 0;">*</b>
-                <span>部门负责人</span>
-                <input type="text" name="port_person" id="port_person" placeholder="1-50个字符" />
-            </li>
-            <li>
-                <b style="color: red;opacity: 0;">*</b>
-                <span>部门城市</span>
-                <input type="text" name="port_city" id="port_city" placeholder="1-50个字符" />
-            </li>
+            @*<li>
+                    <b style="color: red;opacity: 0;">*</b>
+                    <span>部门负责人</span>
+                    <input type="text" name="port_person" id="port_person" placeholder="1-50个字符" />
+                </li>
+                <li>
+                    <b style="color: red;opacity: 0;">*</b>
+                    <span>部门城市</span>
+                    <input type="text" name="port_city" id="port_city" placeholder="1-50个字符" />
+                </li>*@
             <li>
                 <b style="color: red;opacity: 0;">*</b>
                 <span style="position: relative;top: -30px;">部门说明书</span>
-                <textarea name="port_option" class="port_option" placeholder="1-300个字符"></textarea>
+                <textarea name="port_option" class="port_Remark" placeholder="1-200个字符"></textarea>
             </li>
             <li class="btns">
-                <button id="btn-sure" style="background: #29b2a6;color: #fff;margin-left: 80px;">修&nbsp;改</button>
+                <button id="btn-sure" style="background: #29b2a6;color: #fff;margin-left: 80px;" onclick="update()">修&nbsp;改</button>
+                <button id="btn-yes" style="background: #29b2a6;color: #fff;margin-left: 80px;" onclick="insert()">确&nbsp;定</button>
                 <button id="btn-cancle">取&nbsp;消</button>
-                <button id="btn-del">删&nbsp;除</button>
+                <button id="btn-del" onclick="deletes()">删&nbsp;除</button>
             </li>
         </ul>
+        <input type="hidden" id="hiddenid" value="" />
+        <input type="hidden" id="ParentId" value="" />
     </div>
-    <input hidden id="ids" value="" />
     <script type="text/javascript">
         $(function () {
-            $.ajax({
-                url: "/SysDepartment/GetTree",
-                type: "Post",
-                //data: $(this).serialize(),
-                dataType: "json",
-                success: function (data) {
-                    $('#chart-container').orgchart({
-                        'data': data,
-                        'depth': 9,
-                        'nodeContent': 'title',
-                        'nodeID': 'id',
-                        'exportButton': true,
-                        'exportFilename': 'Chart',
-                        'parentNodeSymbol': 'fa-th-large',
-                        'createNode': function ($node, data) {
-                            $node.on('click', function (event) {
-                                if (!$(event.target).is('.edge')) {
-                                    $('#selected-node').val(data.name).data('node', $node);
-                                    $("#ids").val(data.id);
-                                }
-                            });
-                            var html = `<span class="edit">编辑</span>
-                                                              <div class="admin-head no-admin"><span>`+ data.num + `</span></div>
-                                                              <div class="department-detail">
-                                                               <div id="title" title="IT" class="department-name text-overflow-hidden">`+ data.name + `</div>
-                                                                <div class="admin-info node-content padding-top-10">
-                                                                  <span title="" class="admin-name text-overflow-hidden name-width">`+ data.title + `</span>
-                                                                </div>
-                                                                <div title="正式人数/非正式人数" class="people-num node-content">人数：`+ data.num + `（` + data.num + `／` + data.totalNum + `）</div>
-                                                              </div>`;
-                            $node.children('.content').html(html);
-                            var parentComhtml = '<span class="icon depart-mark icon-fenzigongsi">子公司</span>';
-                            if (data.flag == '1') {
-                                $node.children('.content').children(".edit").before(parentComhtml);
-                            }
-                        }
-                    }).on('click', '.orgchart', function (event) {
-                        if (!$(event.target).closest('.node').length) {
-                            $('#selected-node').val('');
-                        }
-                    });
-                    //编辑
-                    $(".edit").on('click', function () {
-                        $.ajax({
-                            url: "/SysDepartment/UpdateTree/" + $("#ids").val(),
-                            type: "Post",
-                            //data: $(this).serialize(),
-                            dataType: "json",
-                            success: function (data) {
-                                $("#port_name").val(data.rows.Name);
-                                $(".mask").css("display", "block");
-                            }
-                        })
-                    });
-                }
-
-            })
-
-
+            select();
             var num = 1, percent = 100;
             //缩小
             $(".raise-scale-btn").on('click', function () {
@@ -167,6 +105,29 @@
             });
             //创建
             $(".create-btn").on('click', function () {
+                $.ajax({
+                    url: "/SysDepartment/GetOption",
+                    type: "Post",
+                    //data: {  },
+                    dataType: "json",
+                    success: function (data) {
+                        getCity("#port_cate");
+                        for (var i = 0; i < data.length; i++) {
+                            $("<option></option>")
+                                .val(data[i].Key)
+                                .text(data[i].Value)
+                                .appendTo($("#port_cate"));
+                        }
+                    }
+                })
+                $('.mask').find(":text,:selected,select,textarea,:hidden,:checked,:password").each(function () {
+                    this.value = "";
+                });
+                $("#btn-sure").hide();
+                $("#btn-del").hide();
+                $("#btn-yes").show();
+                $("#texts").empty();
+                $("#texts").html("创建新增");
                 $(".mask").css("display", "block");
             });
 
@@ -177,6 +138,142 @@
                 $(".mask").css("display", "none");
             });
         });
+        //清除下拉框
+        function getCity(City) {
+            $(City).empty();
+            $("<option></option>")
+                .val("")
+                .text("请选择")
+                .appendTo($(City));
+        }
+        //修改确认
+        function update() {
+            var ParentId = null;
+            if ($("#port_cate").val() == "") {
+                ParentId = $("#ParentId").val();
+            } else {
+                ParentId = $("#port_cate").val();
+            }
+            $.ajax({
+                url: "/SysDepartment/Edit",
+                type: "Post",
+                data: { Id: $("#hiddenid").val(), Name: $("#port_name").val(), ParentId: ParentId, Address: $("#port_Address").val(), Remark: $("#port_Remark").val() },
+                dataType: "json",
+                success: function (data) {
+                    $('#chart-container').empty();
+                    select();
+                    alert(data);
+                    $(".mask").css("display", "none");
+                }
+            })
+        }
+        //创建确认
+        function insert() {
+            var ParentId = $("#port_cate").val();           
+            $.ajax({
+                url: "/SysDepartment/Create",
+                type: "Post",
+                data: { Name: $("#port_name").val(), ParentId: ParentId, Address: $("#port_Address").val(), Remark: $("#port_Remark").val() },
+                dataType: "json",
+                success: function (data) {
+                    $('#chart-container').empty();
+                    select();
+                    alert(data);
+                    $(".mask").css("display", "none");
+                }
+            })
+        }
+        //删除
+        function deletes(){        
+            $.ajax({
+                url: "/SysDepartment/Deletes/" + $("#hiddenid").val(),
+                type: "Post",
+                //data: { id: $("#hiddenid").val()},
+                dataType: "json",
+                success: function (data) {
+                    $('#chart-container').empty();
+                    select();
+                    alert(data);
+                    $(".mask").css("display", "none");
+                }
+            })
+        }
+        //数据加载
+        function select() {
+            $.ajax({
+                url: "/SysDepartment/GetTree",
+                type: "Post",
+                //data: $(this).serialize(),
+                dataType: "json",
+                success: function (data) {
+                    $('#chart-container').orgchart({
+                        'data': data,
+                        'depth': 9,
+                        'nodeContent': 'title',
+                        'nodeID': 'id',
+                        'exportButton': true,
+                        'exportFilename': 'Chart',
+                        'parentNodeSymbol': 'fa-th-large',
+                        'createNode': function ($node, data) {
+                            $node.on('click', function (event) {
+                                if (!$(event.target).is('.edge')) {
+                                    //$('#selected-node').val(data.name).data('node', $node);
+
+                                }
+                            });
+                            var html = `<span class="edit" ids="` + data.id + `">编辑</span>
+                                                                              <div class="admin-head no-admin"><span>`+ data.num + `</span></div>
+                                                                              <div class="department-detail">
+                                                                               <div id="title" title="IT" class="department-name text-overflow-hidden">`+ data.name + `</div>
+                                                                                <div class="admin-info node-content padding-top-10">
+                                                                                  <span title="" class="admin-name text-overflow-hidden name-width">`+ data.title + `</span>
+                                                                                </div>
+                                                                                <div title="正式人数/非正式人数" class="people-num node-content">人数：`+ data.num + `（` + data.num + `／` + data.totalNum + `）</div>
+                                                                              </div>`;
+                            $node.children('.content').html(html);
+                            var parentComhtml = '<span class="icon depart-mark icon-fenzigongsi">子公司</span>';
+                            if (data.flag == '1') {
+                                $node.children('.content').children(".edit").before(parentComhtml);
+                            }
+                        }
+                    }).on('click', '.orgchart', function (event) {
+                        if (!$(event.target).closest('.node').length) {
+                            // $('#selected-node').val('');
+                        }
+                    });
+                    //编辑
+                    $(".edit").on('click', function () {
+                        $.ajax({
+                            url: "/SysDepartment/UpdateTree/" + $(this).attr("ids"),
+                            type: "Post",
+                            //data: $(this).serialize(),
+                            dataType: "json",
+                            success: function (data) {
+                                $("#port_name").val(data.rows.Name);
+                                $("#port_Address").val(data.rows.Address);
+                                $("#port_Remark").val(data.rows.Remark);
+                                $("#hiddenid").val(data.rows.Id);
+                                $("#ParentId").val(data.rows.ParentId);
+                                getCity("#port_cate");
+                                for (var i = 0; i < data.rows.Variables.length; i++) {
+                                    $("<option></option>")
+                                        .val(data.rows.Variables[i].Key)
+                                        .text(data.rows.Variables[i].Value)
+                                        .appendTo($("#port_cate"));
+                                }
+                                $("#btn-yes").hide();
+                                $("#btn-sure").show();
+                                $("#btn-del").show();
+                                $("#texts").empty();
+                                $("#texts").html("编辑修改");
+                                $(".mask").css("display", "block");
+                            }
+                        })
+                    });
+                }
+
+            })
+        }
     </script>
 </body>
 

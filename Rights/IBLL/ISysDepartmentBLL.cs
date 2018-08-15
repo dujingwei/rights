@@ -85,8 +85,14 @@ namespace Langben.IBLL
         /// <param name="entity">一个对象</param>
         /// <returns></returns>
         [OperationContract]
-        bool Edit(ref Common.ValidationErrors validationErrors, SysDepartment entity); 
-    
+        bool Edit(ref Common.ValidationErrors validationErrors, SysDepartment entity);
+        /// <summary>
+        /// 获取自连接树形列表数据
+        /// </summary>
+        /// <returns>自定义的树形结构</returns>
+
+        [OperationContract]
+        IQueryable<SysDepartment> GetAllMetadata(string id);
     }
 }
 

@@ -177,19 +177,23 @@ namespace Langben.App.Controllers
         /// <returns></returns>
         [HttpPost]
         [SupportFilter]
-        public ActionResult Edit(string id, SysDepartment entity)
+        public ActionResult Edit(SysDepartment entity)
         {
             if (entity != null && ModelState.IsValid)
             {   //数据校验
 
                 string currentPerson = GetCurrentPerson();
-                entity.UpdateTime = DateTime.Now;
-                entity.UpdatePerson = currentPerson;
-
+                SysDepartment sys = m_BLL.GetById(entity.Id);
+                sys.UpdateTime = DateTime.Now;
+                sys.UpdatePerson = currentPerson;
+                sys.Name = entity.Name;
+                sys.ParentId = entity.ParentId;
+                sys.Address = entity.Address;
+                sys.Remark = entity.Remark;
                 string returnValue = string.Empty;
-                if (m_BLL.Edit(ref validationErrors, entity))
+                if (m_BLL.Edit(ref validationErrors, sys))
                 {
-                    LogClassModels.WriteServiceLog(Suggestion.UpdateSucceed + "，部门信息的Id为" + id, "部门"
+                    LogClassModels.WriteServiceLog(Suggestion.UpdateSucceed + "，部门信息的Id为" + entity.Id, "部门"
                         );//写入日志                           
                     return Json(Suggestion.UpdateSucceed); //提示更新成功 
                 }
@@ -203,7 +207,7 @@ namespace Langben.App.Controllers
                             return true;
                         });
                     }
-                    LogClassModels.WriteServiceLog(Suggestion.UpdateFail + "，部门信息的Id为" + id + "," + returnValue, "部门"
+                    LogClassModels.WriteServiceLog(Suggestion.UpdateFail + "，部门信息的Id为" + entity.Id + "," + returnValue, "部门"
                         );//写入日志                           
                     return Json(Suggestion.UpdateFail + returnValue); //提示更新失败
                 }
@@ -245,7 +249,37 @@ namespace Langben.App.Controllers
             }
             return Json(returnValue);
         }
-
+        /// <summary>
+        /// 删除
+        /// </summary>
+        /// <param name="collection"></param>
+        /// <returns></returns>   
+        [HttpPost]
+        public ActionResult Deletes(string id)
+        {
+            string returnValue = string.Empty;         
+            if (!string.IsNullOrWhiteSpace(id))
+            {
+                if (m_BLL.Delete(ref validationErrors, id))
+                {
+                    LogClassModels.WriteServiceLog(Suggestion.DeleteSucceed + "，信息的Id为" + id, "消息");//删除成功，写入日志
+                    return Json(Suggestion.DeleteSucceed);
+                }
+                else
+                {
+                    if (validationErrors != null && validationErrors.Count > 0)
+                    {
+                        validationErrors.All(a =>
+                        {
+                            returnValue += a.ErrorMessage;
+                            return true;
+                        });
+                    }
+                    LogClassModels.WriteServiceLog(Suggestion.DeleteFail + "，信息的Id为" + id, "消息");//删除失败，写入日志
+                }
+            }
+            return Json(returnValue);
+        }
         IBLL.ISysDepartmentBLL m_BLL;
 
         ValidationErrors validationErrors = new ValidationErrors();
@@ -347,7 +381,7 @@ namespace Langben.App.Controllers
         [HttpPost]
         public ActionResult GetTree()
         {
-            SysDepartment sysDepartments = m_BLL.GetAll().Where(m => m.ParentId == null).FirstOrDefault();
+            SysDepartment sysDepartments = m_BLL.GetAllMetadata(null).FirstOrDefault();
             if (sysDepartments != null)
             {
                 DataList dataList = new DataList();
@@ -390,36 +424,114 @@ namespace Langben.App.Controllers
         public ActionResult UpdateTree(string id)
         {
             SysDepartment sysDepartment = m_BLL.GetById(id);
+            List<Option> op = new List<Option>();
             if (sysDepartment == null)
             {
                 return null;
             }
+            List<Option> optionslist = new List<Option>();
+            Option option = null;
             List<DataList> departments = sysDepartment.SysDepartment1.Any(a => a.ParentId == sysDepartment.Id) ? Datajson(sysDepartment.SysDepartment1.ToList()) : null;
+            if (departments != null)
+            {
+                List<Option> options = GetTs(departments, ref op);
+                List<string> key = options.Select(s => s.Key).ToList();
+                key.Add(sysDepartment.Id);
+                List<SysDepartment> sysDepartments = m_BLL.GetAll().Where(m => !key.Contains(m.Id)).ToList();
+
+                foreach (SysDepartment item in sysDepartments)
+                {
+                    option = new Option();
+                    option.Key = item.Id;
+                    option.Value = item.Name;
+                    optionslist.Add(option);
+                }
+            }
+            else
+            {
+                List<SysDepartment> sysDepartments = m_BLL.GetAll().Where(m => m.Id != sysDepartment.Id).ToList();
+                foreach (SysDepartment item in sysDepartments)
+                {
+                    option = new Option();
+                    option.Key = item.Id;
+                    option.Value = item.Name;
+                    optionslist.Add(option);
+                }
+            }
             return Json(new treegrid
             {
                 rows = new SysDepartment
                 {
-                    Id = sysDepartment.Id
-                ,
-                    Name = sysDepartment.Name
-                ,
-                    ParentId = sysDepartment.ParentId
-,
-                    Address = sysDepartment.Address
-                ,
-                    Sort = sysDepartment.Sort
-                ,
-                    Remark = sysDepartment.Remark
-                ,
-                    CreateTime = sysDepartment.CreateTime
-                ,
-                    CreatePerson = sysDepartment.CreatePerson
-                ,
-                    UpdateTime = sysDepartment.UpdateTime
-                ,
-                    UpdatePerson = sysDepartment.UpdatePerson
+                    Id = sysDepartment.Id,
+                    Name = sysDepartment.Name,
+                    ParentId = sysDepartment.ParentId,
+                    Address = sysDepartment.Address,
+                    Sort = sysDepartment.Sort,
+                    Remark = sysDepartment.Remark,
+                    CreateTime = sysDepartment.CreateTime,
+                    CreatePerson = sysDepartment.CreatePerson,
+                    UpdateTime = sysDepartment.UpdateTime,
+                    UpdatePerson = sysDepartment.UpdatePerson,
+                    Variables = optionslist
                 }
             });
+        }
+
+        public List<Option> GetTs(List<DataList> dataLists, ref List<Option> options)
+        {
+            List<Option> optionlist = null;
+            if (options.Count > 0)
+            {
+                optionlist = options;
+            }
+            else
+            {
+                optionlist = new List<Option>();
+            }
+            foreach (DataList item in dataLists)
+            {
+                optionlist.Add(new Option
+                {
+                    Key = item.id,
+                    Value = item.title
+                });
+                if (item.children != null && item.children.Any())
+                {
+                    optionlist = GetTs(item.children, ref optionlist);
+                }
+            }
+            return optionlist;
+        }
+
+        /// <summary>
+        /// 获取下拉框
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult GetOption()
+        {
+            List<Option> optionslist = new List<Option>();
+            Option option = null;
+            SysDepartment sysDepartments = m_BLL.GetAllMetadata(null).FirstOrDefault();
+            if (sysDepartments != null)
+            {
+                DataList dataList = new DataList();
+                dataList.id = sysDepartments.Id;
+                dataList.name = "部门";
+                dataList.title = sysDepartments.Name;
+                dataList.num = sysDepartments.SysPerson.Count().ToString();
+                dataList.children = sysDepartments.SysDepartment1.Any(a => a.ParentId == sysDepartments.Id) ? Datajson(sysDepartments.SysDepartment1.ToList()) : null;
+                List<Option> op = new List<Option>();
+                if (dataList.children != null)
+                {
+                    optionslist = GetTs(dataList.children, ref op);
+                }
+                option = new Option();
+                option.Key = sysDepartments.Id;
+                option.Value = sysDepartments.Name;
+                optionslist.Add(option);
+            }
+            return Json(optionslist);
         }
     }
 

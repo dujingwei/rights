@@ -366,7 +366,7 @@ namespace Langben.BLL
         }
         public List<SysDepartment> GetAll()
         {
-            return db.SysDepartment.Where(w => w.ParentId == null).ToList();
+            return repository.GetAll(db).ToList();
         }     
         
         /// <summary>
