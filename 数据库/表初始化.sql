@@ -188,7 +188,7 @@ go
 /*==============================================================*/
 create table FileUploader (
    Id                   nvarchar(36)         not null,
-   Name                 nvarchar(200)        null,
+   [Name]                 nvarchar(200)        null,
    Path                 nvarchar(200)        null,
    FullPath             varchar(500)         null,
    Suffix               nvarchar(200)        null,
