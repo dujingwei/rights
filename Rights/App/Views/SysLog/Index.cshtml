@@ -189,7 +189,7 @@
         $("#langbenQuery").click(function () {
             //将查询条件按照分隔符拼接成字符串
             var search = "";
-            $('#divQuery').find(":text,:selected,select,textarea,:hidden,:checked,:password").each(function () {
+            $('#divdQuery').find(":text,:selected,select,textarea,:hidden,:checked,:password").each(function () {
                 if (this.id == "CreateTime") {
                     var arrt = this.value.split('~');
                     search += "CreateTimeStart_Time" + "&" + arrt[0] + "^" + "CreateTimeEnd_Time" + "&" + arrt[1] + "^";
