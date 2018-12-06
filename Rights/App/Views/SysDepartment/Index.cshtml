@@ -1,161 +1,258 @@
-﻿@model Langben.DAL.SysDepartment 
-@{ Layout = "~/Views/Shared/Index.cshtml"; }
-@using Common @using Models
-  
+﻿
+   <!--创建按钮-->
+    <button class="create-btn">创建</button>
+    <div id="chart-container"></div>
+    <!--放大缩小功能按钮-->
+    <div class="scale-box">
+        <span class="raise-scale-btn">－</span>
+        <span class="scale-percent"><span id="num">100</span>%</span>
+        <span class="reduce-scale-btn">＋</span>
+        <span class="reset-scale-btn">重置</span>
+    </div>
+    <!--弹框-->
+    <div class="mask">
+        <ul class="pop-box">
+            <li class="pop-title">
+                <span id="texts">编辑修改</span>
+                <span class="close">×</span>
+            </li>
+            <li>
+                <b style="color: red;">*</b>
+                <span>部门名称</span>
+                <input type="text" name="port_name" id="port_name" placeholder="1-50个字符" />
+            </li>
+            <li>
+                <b style="color: red;">*</b>
+                <span>部门地址</span>
+                <input type="text" name="port_num" id="port_Address" placeholder="1-50个字符" />
+
+            </li>
+            <li style="">
+                <b style="color: red;">*</b>
+                <span>部门</span>
+                <select style="" id="port_cate" class="port_cate" name="port_cate"></select>
+            </li>
+            @*<li>
+                    <b style="color: red;opacity: 0;">*</b>
+                    <span>部门负责人</span>
+                    <input type="text" name="port_person" id="port_person" placeholder="1-50个字符" />
+                </li>
+                <li>
+                    <b style="color: red;opacity: 0;">*</b>
+                    <span>部门城市</span>
+                    <input type="text" name="port_city" id="port_city" placeholder="1-50个字符" />
+                </li>*@
+            <li>
+                <b style="color: red;opacity: 0;">*</b>
+                <span style="position: relative;top: -30px;">部门说明书</span>
+                <textarea name="port_option" class="port_Remark" placeholder="1-200个字符"></textarea>
+            </li>
+            <li class="btns">
+                <button id="btn-sure" style="background: #29b2a6;color: #fff;margin-left: 80px;" onclick="update()">修&nbsp;改</button>
+                <button id="btn-yes" style="background: #29b2a6;color: #fff;margin-left: 80px;" onclick="insert()">确&nbsp;定</button>
+                <button id="btn-cancle">取&nbsp;消</button>
+                <button id="btn-del" onclick="deletes()">删&nbsp;除</button>
+            </li>
+        </ul>
+        <input type="hidden" id="hiddenid" value="" />
+        <input type="hidden" id="ParentId" value="" />
+    </div>
     <script type="text/javascript">
         $(function () {
-
-                $('#flexigridData').treegrid({
-                    title: '注意：请先删除子节点，然后删除父节点',
-                     iconCls: 'icon-site',
-//                    url: '../SysDepartment/GetAllMetadata',
-                    idField: 'Id',
-                    treeField: 'Name',
-                    rownumbers: true,
-                    toolbar: [
-                    {
-                        text: '详细',
-                        iconCls: 'icon-search',
-                        handler: function () {
-                            return getView();
-                        }
-                    }, {
-                        text: '创建',
-                        iconCls: 'icon-add',
-                        handler: function () {
-                            return flexiCreate();
-                        }
-                    },  {
-                        text: '删除',
-                        iconCls: 'icon-remove',
-                        handler: function () {
-                            return flexiDelete();
-                        }
-                    }, {
-                        text: '修改',
-                        iconCls: 'icon-edit',
-                        handler: function () {
-                            return flexiModify();
-                        }
-                   
-                    }],
-                  
-                    columns: [[ 
-                    	{ field: 'Name', title: '@Html.DisplayNameFor(model => model.Name)', width: 215 }
-                        
-					,{ field: 'Address', title:  '@Html.DisplayNameFor(model => model.Address)', width: 197 }
-					,{ field: 'Sort', title:  '@Html.DisplayNameFor(model => model.Sort)', width: 197 }
-					,{ field: 'Remark', title:  '@Html.DisplayNameFor(model => model.Remark)', width: 197 }
-					 
-				    ]]
-                     ,
-                    onBeforeLoad: function (row, param) {
-                       
-                        if (row) {
-                            $(this).treegrid('options').url = '../SysDepartment/GetAllMetadata/' + row.Id;
-                        } else {
-                            $(this).treegrid('options').url = '../SysDepartment/GetAllMetadata';
+            select();
+            var num = 1, percent = 100;
+            //缩小
+            $(".raise-scale-btn").on('click', function () {
+                num -= 0.1;
+                percent -= 10;
+                $(".orgchart").css("transform", "scale(" + num + ")");
+                $("#num").html(percent);
+                return num, percent;
+            });
+            //放大
+            $(".reduce-scale-btn").on('click', function () {
+                num += 0.1;
+                percent += 10;
+                console.log(num);
+                $(".orgchart").css("transform", "scale(" + num + ")");
+                $("#num").html(percent);
+                return num, percent;
+            });
+            //重置
+            $(".reset-scale-btn").on('click', function () {
+                $(".orgchart").css("transform", "scale(1)");
+                $("#num").html(100);
+                return num = 1, percent = 100;
+            });
+            //创建
+            $(".create-btn").on('click', function () {
+                $.ajax({
+                    url: "/SysDepartment/GetOption",
+                    type: "Post",
+                    //data: {  },
+                    dataType: "json",
+                    success: function (data) {
+                        getCity("#port_cate");
+                        for (var i = 0; i < data.length; i++) {
+                            $("<option></option>")
+                                .val(data[i].Key)
+                                .text(data[i].Value)
+                                .appendTo($("#port_cate"));
                         }
                     }
+                })
+                $('.mask').find(":text,:selected,select,textarea,:hidden,:checked,:password").each(function () {
+                    this.value = "";
                 });
-          
-            var parent = window.dialogArguments; //获取父页面
-            if (parent == "undefined" || parent == null) {
-                //    不是在iframe中打开的
-            } else {
-                //隐藏所有的按钮和分隔符
-                $(".l-btn.l-btn-plain").hide();
-                $(".datagrid-btn-separator").hide();
-                //添加选择按钮
-                $('#flexigridData').datagrid("addToolbarItem", [{ "text": "选择", "iconCls": "icon-ok", handler: function () { flexiSelect(); } }]);
-            }
-         });
+                $("#btn-sure").hide();
+                $("#btn-del").hide();
+                $("#btn-yes").show();
+                $("#texts").empty();
+                $("#texts").html("创建新增");
+                $(".mask").css("display", "block");
+            });
 
-         function flexiSelect() {
-            var node = $('#flexigridData').treegrid('getSelected');
-            if (!node) {
-                $.messager.alert('操作提示', '请选择一条数据!', 'warning');
-               return false;
-            }
-            var arr = new Array(0);
-            arr.push(node.Id);
-            arr.push("^"); //主键列和显示列的分割符 ^ 
-            arr.push(node.Name);
-            //主键列和显示列之间用 ^ 分割   每一项用 , 分割
-            if (arr.length == 3) {//一条数据和多于一条
-                returnParent(arr.join("&")); //每一项用 & 分割
-            }
-             return false;
+            $("#btn-cancle").on('click', function () {
+                $(".mask").css("display", "none");
+            });
+            $(".close").on('click', function () {
+                $(".mask").css("display", "none");
+            });
+        });
+        //清除下拉框
+        function getCity(City) {
+            $(City).empty();
+            $("<option></option>")
+                .val("")
+                .text("请选择")
+                .appendTo($(City));
         }
-        //导航到查看详细的按钮
-        function getView() {
-
-            var arr = $('#flexigridData').treegrid('getSelected');
-
-            if (arr) {
-                window.location.href = "../SysDepartment/Details/" + arr.Id;
-               
+        //修改确认
+        function update() {
+            var ParentId = null;
+            if ($("#port_cate").val() == "") {
+                ParentId = $("#ParentId").val();
             } else {
-                $.messager.alert('操作提示', '请选择一条数据!', 'warning');
+                ParentId = $("#port_cate").val();
             }
-            return false;
+            $.ajax({
+                url: "/SysDepartment/Edit",
+                type: "Post",
+                data: { Id: $("#hiddenid").val(), Name: $("#port_name").val(), ParentId: ParentId, Address: $("#port_Address").val(), Remark: $("#port_Remark").val() },
+                dataType: "json",
+                success: function (data) {
+                    $('#chart-container').empty();
+                    select();
+                    alert(data);
+                    $(".mask").css("display", "none");
+                }
+            })
         }
-        //导航到创建的按钮
-        function flexiCreate() {
-
-            window.location.href = "../SysDepartment/Create";
-            return false;
+        //创建确认
+        function insert() {
+            var ParentId = $("#port_cate").val();           
+            $.ajax({
+                url: "/SysDepartment/Create",
+                type: "Post",
+                data: { Name: $("#port_name").val(), ParentId: ParentId, Address: $("#port_Address").val(), Remark: $("#port_Remark").val() },
+                dataType: "json",
+                success: function (data) {
+                    $('#chart-container').empty();
+                    select();
+                    alert(data);
+                    $(".mask").css("display", "none");
+                }
+            })
         }
-        //导航到修改的按钮
-        function flexiModify() {
+        //删除
+        function deletes(){        
+            $.ajax({
+                url: "/SysDepartment/Deletes/" + $("#hiddenid").val(),
+                type: "Post",
+                //data: { id: $("#hiddenid").val()},
+                dataType: "json",
+                success: function (data) {
+                    $('#chart-container').empty();
+                    select();
+                    alert(data);
+                    $(".mask").css("display", "none");
+                }
+            })
+        }
+        //数据加载
+        function select() {
+            $.ajax({
+                url: "/SysDepartment/GetTree",
+                type: "Post",
+                //data: $(this).serialize(),
+                dataType: "json",
+                success: function (data) {
+                    $('#chart-container').orgchart({
+                        'data': data,
+                        'depth': 9,
+                        'nodeContent': 'title',
+                        'nodeID': 'id',
+                        'exportButton': true,
+                        'exportFilename': 'Chart',
+                        'parentNodeSymbol': 'fa-th-large',
+                        'createNode': function ($node, data) {
+                            $node.on('click', function (event) {
+                                if (!$(event.target).is('.edge')) {
+                                    //$('#selected-node').val(data.name).data('node', $node);
 
-            var arr = $('#flexigridData').treegrid('getSelected');
-
-            if (arr) {
-                window.location.href = "../SysDepartment/Edit/" + arr.Id;
-               
-            } else {
-                $.messager.alert('操作提示', '请选择一条数据!', 'warning');
-            }
-             return false;
-        };
-        //删除的按钮
-        function flexiDelete() {
-          
-            var node = $('#flexigridData').treegrid('getSelected');
-            if (!node) {
-                $.messager.alert('操作提示', '请选择数据!', 'warning');
-
-            } else {
-                $.messager.confirm('操作提示', "确认删除这1项吗？", function (r) {
-                    if (r) {
-                        $.post("../SysDepartment/Delete", { query: node.Id }, function (res) {
-                            if (res == "OK") {
-                                remove();
-                                $.messager.alert('操作提示', '删除成功!', 'info');                  
+                                }
+                            });
+                            var html = `<span class="edit" ids="` + data.id + `">编辑</span>
+                                                                              <div class="admin-head no-admin"><span>`+ data.num + `</span></div>
+                                                                              <div class="department-detail">
+                                                                               <div id="title" title="IT" class="department-name text-overflow-hidden">`+ data.name + `</div>
+                                                                                <div class="admin-info node-content padding-top-10">
+                                                                                  <span title="" class="admin-name text-overflow-hidden name-width">`+ data.title + `</span>
+                                                                                </div>
+                                                                                <div title="正式人数/非正式人数" class="people-num node-content">人数：`+ data.num + `（` + data.num + `／` + data.totalNum + `）</div>
+                                                                              </div>`;
+                            $node.children('.content').html(html);
+                            var parentComhtml = '<span class="icon depart-mark icon-fenzigongsi">子公司</span>';
+                            if (data.flag == '1') {
+                                $node.children('.content').children(".edit").before(parentComhtml);
                             }
-                            else {
-                                if (res == "") {
-                                    $.messager.alert('操作提示', '删除失败!请查看该数据与其他模块下的信息的关联，或联系管理员。', 'info');
+                        }
+                    }).on('click', '.orgchart', function (event) {
+                        if (!$(event.target).closest('.node').length) {
+                            // $('#selected-node').val('');
+                        }
+                    });
+                    //编辑
+                    $(".edit").on('click', function () {
+                        $.ajax({
+                            url: "/SysDepartment/UpdateTree/" + $(this).attr("ids"),
+                            type: "Post",
+                            //data: $(this).serialize(),
+                            dataType: "json",
+                            success: function (data) {
+                                $("#port_name").val(data.rows.Name);
+                                $("#port_Address").val(data.rows.Address);
+                                $("#port_Remark").val(data.rows.Remark);
+                                $("#hiddenid").val(data.rows.Id);
+                                $("#ParentId").val(data.rows.ParentId);
+                                getCity("#port_cate");
+                                for (var i = 0; i < data.rows.Variables.length; i++) {
+                                    $("<option></option>")
+                                        .val(data.rows.Variables[i].Key)
+                                        .text(data.rows.Variables[i].Value)
+                                        .appendTo($("#port_cate"));
                                 }
-                                else {
-                                    $.messager.alert('操作提示', res, 'info');
-                                }
-                            }             
-                        }); 
-                    }
-                });
-            }                  
-            return false;
-        };                
-       
-       
-        function remove() {
-            var node = $('#flexigridData').treegrid('getSelected');
-            if (node) {
-                $('#flexigridData').treegrid('remove', node.Id);
-            }
+                                $("#btn-yes").hide();
+                                $("#btn-sure").show();
+                                $("#btn-del").show();
+                                $("#texts").empty();
+                                $("#texts").html("编辑修改");
+                                $(".mask").css("display", "block");
+                            }
+                        })
+                    });
+                }
+
+            })
         }
     </script>
- 
-

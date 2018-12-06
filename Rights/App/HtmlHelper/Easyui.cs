@@ -59,6 +59,18 @@ namespace Models
         /// </summary>
         public List<SystemTree> children = new List<SystemTree>();
     }
+
+
+    public class DataList
+    {
+        public string id { get; set; }
+        public string name { get; set; }
+        public string title { get; set; }
+        public string num { get; set; }
+        public string totalNum { get { return "10"; } }
+        public string flag { get { return "0"; } }
+        public List<DataList> children = new List<DataList>();
+    }
     /// <summary>
     /// 列表中的按钮导航
     /// </summary>

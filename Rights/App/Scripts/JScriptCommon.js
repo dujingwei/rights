@@ -1,37 +1,67 @@
-﻿
-//index页面的dataTable扩展
-  $.extend($.fn.dataTable.defaults, {
-        dom: "<'row'<'col-sm-12'tr>>" +
-                "<'row'<'col-sm-5'i><'col-sm-7'p>>",//默认是lfrtip
-        processing: true,//加载中
-        responsive: true,
-        serverSide: true,//服务器模式
-        searching: false,//datatables自带的搜索
-        pagingType: "full_numbers",//分页模式        
-        language: {
-            "processing": "努力加载中...",
-            "lengthMenu": "每页显示 _MENU_ 条数据",
-            "zeroRecords": "没有匹配数据",
-            "info": "显示第 _START_ 至 _END_ 项，共 _TOTAL_ 项",
-            "infoEmpty": "努力了，但没找到数据",
-            "infoFiltered": "",
-            "infoPostFix": "",
-            "emptyTable": "没有匹配结果",
-            "loadingRecords": "载入中...",
-            "thousands": ",",
-            "paginate": {
-                "first": "首页",
-                "previous": "上一页",
-                "next": "下一页",
-                "last": "末页"
-            },
-            "aria": {
-                "sortAscending": ": 以升序排列此列",
-                "sortDescending": ": 以降序排列此列"
-            }
+﻿//index页面的dataTable扩展
+$.extend($.fn.dataTable.defaults, {
+    dom: "<'row'<'col-sm-12'tr>>" +
+        "<'row'<'col-sm-5'i><'col-sm-7'p>>",//默认是lfrtip
+    processing: true,//加载中
+    responsive: true,
+    serverSide: true,//服务器模式
+    searching: false,//datatables自带的搜索
+    pagingType: "full_numbers",//分页模式        
+    language: {
+        "processing": "努力加载中...",
+        "lengthMenu": "每页显示 _MENU_ 条数据",
+        "zeroRecords": "没有匹配数据",
+        "info": "显示第 _START_ 至 _END_ 项，共 _TOTAL_ 项",
+        "infoEmpty": "努力了，但没找到数据",
+        "infoFiltered": "",
+        "infoPostFix": "",
+        "emptyTable": "没有匹配结果",
+        "loadingRecords": "载入中...",
+        "thousands": ",",
+        "paginate": {
+            "first": "首页",
+            "previous": "上一页",
+            "next": "下一页",
+            "last": "末页"
+        },
+        "aria": {
+            "sortAscending": ": 以升序排列此列",
+            "sortDescending": ": 以降序排列此列"
         }
-    });
-
+    }
+});
+function daterangepicker2(id, datepicker) {
+    var options = {};
+    options.ranges = {
+        '今天': [moment(), moment()],
+        '昨天': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+        '最近7天': [moment().subtract(6, 'days'), moment()],
+        '最近30天': [moment().subtract(29, 'days'), moment()],
+        //'This Month': [moment().startOf('month'), moment().endOf('month')],//这个月
+        //'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]//上个月
+    };
+    options.opens = 'right';//日期选择框的弹出位置
+    options.singleDatePicker = datepicker;//选择单个时间
+    options.buttonClasses = 'btn btn-default';
+    options.applyClass = 'btn-small btn-primary blue';
+    options.cancelClass = 'btn-small';
+    options.locale = {
+        separator: ' - ',//时间分割符
+        format: 'YYYY-MM-DD',//时间格式
+        applyLabel: '确定',
+        cancelLabel: '取消',
+        fromLabel: '起始时间',
+        toLabel: '结束时间',
+        customRangeLabel: '自定义',
+        daysOfWeek: ['日', '一', '二', '三', '四', '五', '六'],
+        monthNames: ['一月', '二月', '三月', '四月', '五月', '六月',
+            '七月', '八月', '九月', '十月', '十一月', '十二月'],
+        firstDay: 1
+    };
+    options.dateFormat = 'YYYY-MM-DD';
+    options.showDropdowns = true;//年月加下拉框
+    $(id).daterangepicker(options, function (start, end, label) { console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')'); });
+}
 function returnParent(value) {//获取子窗体返回值
     var parent = window.dialogArguments; //获取父页面
     //parent.location.reload(); //刷新父页面
@@ -41,7 +71,7 @@ function returnParent(value) {//获取子窗体返回值
     }
     return;
 }
- function isNumber(id) {
+function isNumber(id) {
 
     if (isNaN(Number(id.value))) {
 
@@ -66,13 +96,13 @@ function bindDropDownList(id, parentid) {
                     return;
                 }
                 $("<option></option>")
-                        .val(item["Value"])
-                        .text(item["Text"])
-                        .appendTo($(id));
+                    .val(item["Value"])
+                    .text(item["Text"])
+                    .appendTo($(id));
             });
         });
     }
-} 
+}
 
 function deleteTable(table, hidden) { //删除table和隐藏的值
     var tableId = document.getElementById(table); //获取表格
@@ -86,7 +116,7 @@ function deleteTable(table, hidden) { //删除table和隐藏的值
         hiddenValue.value = hiddenValue.value.replace(table, ""); //为隐藏控件赋值
     }
 }
-function showModalMany(me, url, dialogWidth,callback) { //弹出窗体，多选   
+function showModalMany(me, url, dialogWidth, callback) { //弹出窗体，多选   
     if (dialogWidth == null || dialogWidth == "undefined" || dialogWidth == "") {
         dialogWidth = 968;
     }
@@ -95,7 +125,7 @@ function showModalMany(me, url, dialogWidth,callback) { //弹出窗体，多选
     if (reValue == null || reValue == "undefined" || reValue == "") {
         return; //如果返回值为空，就返回
     }
-	
+
     var index = reValue.split("^"); //分割符 ^ 的位置
     if (index[0] == null || index[0] == "undefined" || index[0].length < 1) {
         return;
@@ -106,23 +136,21 @@ function showModalMany(me, url, dialogWidth,callback) { //弹出窗体，多选
     var h = "";
     for (var i = 0; i < hid.length - 1; i++) {
         if (hid[i] != "undefined" && hid[i] != "" && view[i + 1] != "undefined" && view[i + 1] != "") {
-            
-			var tableId = document.getElementById(hid[i] + "&" + view[i + 1]); //获取表格
-			if(tableId==null)
-			{
-			h += "^" + hid[i] + "&" + view[i + 1];
-            content += '<table  id="' + hid[i] + "&" + view[i + 1] + '" class="deleteStyle"><tr><td><img src="../../../Images/deleteimge.png" title="点击删除"  alt="删除" onclick=" deleteTable(' + "'" + hid[i] + "&" + view[i + 1] + "'," + "'" + me + "'" + ');" /></td><td>' + view[i + 1] + '</td></tr></table>';
-			}
+
+            var tableId = document.getElementById(hid[i] + "&" + view[i + 1]); //获取表格
+            if (tableId == null) {
+                h += "^" + hid[i] + "&" + view[i + 1];
+                content += '<table  id="' + hid[i] + "&" + view[i + 1] + '" class="deleteStyle"><tr><td><img src="../../../Images/deleteimge.png" title="点击删除"  alt="删除" onclick=" deleteTable(' + "'" + hid[i] + "&" + view[i + 1] + "'," + "'" + me + "'" + ');" /></td><td>' + view[i + 1] + '</td></tr></table>';
+            }
         }
     }
     var hidden = document.getElementById(me); //获取隐藏的控件
     hidden.value += h; //为隐藏控件赋值
     var c = document.getElementById("check" + me);
     c.innerHTML += content;
-	if(callback!=null)
-	{
-		callback()
-	}
+    if (callback != null) {
+        callback()
+    }
 }
 
 function showTreeOnlyEdit(me, url) { //弹出窗体 ,单选
@@ -158,10 +186,10 @@ function showTreeOnlyEdit(me, url) { //弹出窗体 ,单选
         if (hid != "undefined" && hid != "" && view != "undefined" && view != "") {
 
             content += '<table  id="' + hid + "&" + view
-            + '" class="deleteStyle"><tr><td><img src="../../../Images/deleteimge.png" title="点击删除"  alt="删除" onclick=" deleteTable('
-            + "'" + hid + "&" + view
-             + "'," + "'" + me + "'" + ');" /></td><td>' + view
-              + '</td></tr></table>';
+                + '" class="deleteStyle"><tr><td><img src="../../../Images/deleteimge.png" title="点击删除"  alt="删除" onclick=" deleteTable('
+                + "'" + hid + "&" + view
+                + "'," + "'" + me + "'" + ');" /></td><td>' + view
+                + '</td></tr></table>';
 
             hidden.value = hid; //为隐藏控件赋值
             var c = document.getElementById("check" + me);
@@ -198,8 +226,8 @@ function showModalOnly(me, url) { //弹出窗体 ,单选
         if (hid[i] != "undefined" && hid[i] != "" && view[i + 1] != "undefined" && view[i + 1] != "") {
 
             content += '<table  id="' + hid[i]
-            + '" class="deleteStyle"><tr><td><img src="../../../Images/deleteimge.png" title="点击删除"  alt="删除" onclick=" deleteTable('
-            + "'" + hid[i] + "'," + "'" + me + "'" + ');" /></td><td>' + view[i + 1] + '</td></tr></table>';
+                + '" class="deleteStyle"><tr><td><img src="../../../Images/deleteimge.png" title="点击删除"  alt="删除" onclick=" deleteTable('
+                + "'" + hid[i] + "'," + "'" + me + "'" + ');" /></td><td>' + view[i + 1] + '</td></tr></table>';
 
             hidden.value = hid[i]; //为隐藏控件赋值
             var c = document.getElementById("check" + me);
@@ -231,7 +259,7 @@ function BackList(url) {
     $("#contentBody").load(url, function () {
 
     });
-   // window.location.href = '../../' + url;
+    // window.location.href = '../../' + url;
 }
 function manyTreeChecked(node, checked, hidControl, treeId) {
     var hidArr = $('#' + hidControl).val().split(',');
@@ -242,7 +270,7 @@ function manyTreeChecked(node, checked, hidControl, treeId) {
         var nodeChildren = $('#' + treeId).tree("getChildren", node.target);
         if (nodeChildren != null) {
             for (var i = 0; i < nodeChildren.length; i++) {
-                treeChecked(nodeChildren[i].id,treeId,"tree-checkbox1");
+                treeChecked(nodeChildren[i].id, treeId, "tree-checkbox1");
                 hidArr.push(nodeChildren[i].id);
             }
         }
@@ -303,14 +331,16 @@ function treeChecked(node, treeId, className) {
         ck.addClass(className);
     }
 }
-
- 
 function dateConvert(value) {
+    if (value == null) return '';
     var reg = new RegExp('/', 'g');
     var d = eval('new ' + value.replace(reg, ''));
     return new Date(d).format('yyyy-MM-dd')
 }
- 
+
+function isInt(t) {
+    t.value = t.value.replace(/[^0-9]/g, '')
+}
 $(function () {
     //时间格式化
     Date.prototype.format = function (format) {
@@ -344,97 +374,12 @@ $(function () {
         return format;
     };
 
-    $.extend($.fn.datagrid.methods, {
-        addToolbarItem: function (jq, items) {
-            return jq.each(function () {
-                var dpanel = $(this).datagrid('getPanel');
-                var toolbar = dpanel.children("div.datagrid-toolbar");
-                if (!toolbar.length) {
-                    toolbar = $("<div class=\"datagrid-toolbar\"><table cellspacing=\"0\" cellpadding=\"0\"><tr></tr></table></div>").prependTo(dpanel);
-                    $(this).datagrid('resize');
-                }
-                var tr = toolbar.find("tr");
-                for (var i = 0; i < items.length; i++) {
-                    var btn = items[i];
-                    if (btn == "-") {
-                        $("<td><div class=\"datagrid-btn-separator\"></div></td>").appendTo(tr);
-                    } else {
-                        var td = $("<td></td>").appendTo(tr);
-                        var b = $("<a href=\"javascript:void(0)\"></a>").appendTo(td);
-                        b[0].onclick = eval(btn.handler || function () { });
-                        b.linkbutton($.extend({}, btn, {
-                            plain: true
-                        }));
-                    }
-                }
-            });
-        },
-        removeToolbarItem: function (jq, param) {
-            return jq.each(function () {
-                var dpanel = $(this).datagrid('getPanel');
-                var toolbar = dpanel.children("div.datagrid-toolbar");
-                var cbtn = null;
-                if (typeof param == "number") {
-                    cbtn = toolbar.find("td").eq(param).find('span.l-btn-text');
-                } else if (typeof param == "string") {
-                    cbtn = toolbar.find("span.l-btn-text:contains('" + param + "')");
-                }
-                if (cbtn && cbtn.length > 0) {
-                    cbtn.closest('td').remove();
-                    cbtn = null;
-                }
-            });
-        }
-    });
+
 
 })
-var th = $.cookie('easyuiThemeName');
-if (th != undefined && th != '') {
-    onChangeTheme($.cookie('easyuiThemeName'));
-}
-function onChangeTheme(themeName) {
-    var themePath;
-    if (themeName.value) {
-        themePath = themeName.value;
-        $.ajax({
-            type: "get",
-            url: '/Home/SaveTheme/?theme=' + themePath,
-            cache: false,
-            beforeSend: function (XMLHttpRequest) {
 
-            },
-            success: function (data, textStatus) {
-                console.log("皮肤保存成功");
-            },
-            complete: function (XMLHttpRequest, textStatus) {
-
-            },
-            error: function () {
-
-            }
-        });
-    } else {
-        themePath = themeName;
-    }
-    var $easyuiTheme = $('#easyuiTheme');
-    var url = $easyuiTheme.attr('href');
-    var href = url.substring(0, url.indexOf('themes')) + 'themes/' + themePath + '/easyui.css';
-    $easyuiTheme.attr('href', href);
-    //$('#mainCss').attr('href', 'Content/default.css');
-    var $iframe = $('iframe');
-    if ($iframe.length > 0) {
-        for (var i = 0; i < $iframe.length; i++) {
-            var ifr = $iframe[i];
-            $(ifr).contents().find('#easyuiTheme').attr('href', href);
-        }
-    }
-    $.parser.parse();
-    $.cookie('easyuiThemeName', themePath, {
-        expires: 60
-    });
-};
 //提交表单
 function SubmitForm() {
-   $("form").submit();
+    $("form").submit();
 
 }

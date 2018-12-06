@@ -18,7 +18,7 @@ namespace Langben.DAL
         public string SysDocumentId { get; set; }
         [Display(Name = "文档管理")]
         public string SysDocumentIdOld { get; set; }
-        
+        public List<Option> Variables = new List<Option>();
         #endregion
 
     }
@@ -74,6 +74,15 @@ namespace Langben.DAL
 			public object UpdatePerson { get; set; }
 
 
+    }
+
+    /// <summary>
+    /// 下拉框
+    /// </summary>
+    public class Option
+    {
+        public string Key { get; set; }
+        public string Value { get; set; }
     }
 }
  

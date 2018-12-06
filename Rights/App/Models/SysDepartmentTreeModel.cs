@@ -14,7 +14,7 @@ namespace Langben.App.Models
     public class SysDepartmentTreeNodeCollection
     {
         IEnumerable<SysDepartment> listTree;
-        public bool Bind(IEnumerable<SysDepartment> entitys, string myParentId, ref List<SystemTree> myChildren)
+        public bool Bind(IEnumerable<SysDepartment> entitys, string myParentId, ref List<DataList> myChildren)
         {
             if (null != myParentId)
                 listTree = from o in entitys
@@ -29,7 +29,7 @@ namespace Langben.App.Models
             {//填充数据
                 foreach (var item in listTree)
                 {
-                    SystemTree myTree = new SystemTree() { id = item.Id.GetString(), text = item.Name.GetString() };
+                    DataList myTree = new DataList() { id = item.Id.GetString(), title = item.Name.GetString(), num= item.SysPerson.Count().ToString() };
                     //if (string.IsNullOrWhiteSpace(item.Status))
                     //    myTree.@checked = false;
                     //else
@@ -39,15 +39,15 @@ namespace Langben.App.Models
                     myChildren.Add(myTree);
                     if (Bind(entitys, item.Id, ref myTree.children))//递归调用
                     {
-                        if (null != item.ParentId)
-                        {//根目录
-                           // myTree.iconCls = "icon-ok";//如果包含此字符串，则点击查看全部
-                            myTree.state = "open";//默认是打开还是关闭
-                        }
-                        else
-                        {
-                            myTree.state = "closed";
-                        }
+                        //if (null != item.ParentId)
+                        //{//根目录
+                        //   // myTree.iconCls = "icon-ok";//如果包含此字符串，则点击查看全部
+                        //    myTree.state = "open";//默认是打开还是关闭
+                        //}
+                        //else
+                        //{
+                        //    myTree.state = "closed";
+                        //}
                     }
                 }
                 return true;

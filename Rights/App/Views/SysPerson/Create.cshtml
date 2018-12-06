@@ -1,184 +1,358 @@
 ﻿@model Langben.DAL.SysPerson
-
+@using Models
 @{
     Layout = "~/Views/Shared/Create.cshtml";
 }
-@using Common
-@using Models
- 
-@section CurentPlace {
- 
-      创建  
- 
- }
-    <fieldset>
-        <legend>
-            <input class="a2 f2" type="submit" value="创建" />
-            <input class="a2 f2" type="button" onclick="BackList('SysPerson')" value="返回" />
-        </legend>
-            <div class="bigdiv">
-                <div style="float:right; width:379px;height:184px;">
-                        <div style="text-align:center;">
-                            <img id="showPic" src="~/Images/noPic.jpg" width="149" height="175" style="padding-bottom: 0px;"/>
-                            <div id="uploader-demo">
-                                <!--用来存放item-->
-                                <div id="fileList" style="display:none;" class="uploader-list"></div>
-                                <div id="filePicker">上传头像</div>
+<div class="portlet-body form">
+
+    <form action="/SysPerson/Create" class="form-horizontal">
+        <div class="form-body">
+            <div class="form-actions">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-md-offset-3 col-md-9">
+                                <button type="submit" class="btn btn-primary">创建</button>
+                                <button type="button" class="btn default" onclick="BackList('/SysPerson')">返回</button>
                             </div>
                         </div>
                     </div>
-                <div class="editor-label">
-                    @Html.LabelFor(model => model.Name)：
-                </div>
-                <div class="editor-field">
-                    @Html.EditorFor(model => model.Name)
-                    @Html.ValidationMessageFor(model => model.Name)
-                </div>
-                <div class="editor-label">
-                    @Html.LabelFor(model => model.MyName)：
-                </div>
-                <div class="editor-field">
-                    @Html.EditorFor(model => model.MyName)
-                    @Html.ValidationMessageFor(model => model.MyName)
-                </div>
-                <div class="editor-label">
-                    @Html.LabelFor(model => model.Password)：
-                </div>
-                <div class="editor-field">
-                    @Html.EditorFor(model => model.Password)
-                    @Html.ValidationMessageFor(model => model.Password)
-                </div>
-                <div class="editor-label">
-                    @Html.LabelFor(model => model.SurePassword)：
-                </div>
-                <div class="editor-field">
-                    @Html.EditorFor(model => model.SurePassword)
-                    @Html.ValidationMessageFor(model => model.SurePassword)
-                </div>
-                <div class="editor-label">
-                    @Html.LabelFor(model => model.Sex)：
-                </div>
-                <div class="editor-field">
-                    @Html.DropDownListFor(model => model.Sex, Models.SysFieldModels.GetSysField("SysPerson", "Sex"))
-                </div>
-                <div class="editor-label">
-                    <a class="anUnderLine" onclick="showModalOnly('SysDepartmentId','../../SysDepartment');">
-                        @Html.LabelFor(model => model.SysDepartmentId)
-                    </a>：
-                </div>
-                <div class="editor-field">
-                    <div id="checkSysDepartmentId">
+                    <div class="col-md-6">
                     </div>
-                    @Html.HiddenFor(model => model.SysDepartmentId)
                 </div>
-                <div class="editor-label">
-                    @Html.LabelFor(model => model.Position)：
-                </div>
-                <div class="editor-field">
-                    @Html.EditorFor(model => model.Position)
-                    @Html.ValidationMessageFor(model => model.Position)
-                </div>
-                <div class="editor-label">
-                    @Html.LabelFor(model => model.MobilePhoneNumber)：
-                </div>
-                <div class="editor-field">
-                    @Html.EditorFor(model => model.MobilePhoneNumber)
-                    @Html.ValidationMessageFor(model => model.MobilePhoneNumber)
-                </div>
-                <div class="editor-label">
-                    @Html.LabelFor(model => model.PhoneNumber)：
-                </div>
-                <div class="editor-field">
-                    @Html.EditorFor(model => model.PhoneNumber)
-                    @Html.ValidationMessageFor(model => model.PhoneNumber)
-                </div>
-                <div class="editor-label">
-                    @Html.LabelFor(model => model.Province)：
-                </div>
-                <div class="editor-field">
-                    @Html.DropDownListFor(model => model.Province,Models.SysFieldModels.GetSysField("SysPerson","Province"),"请选择")
-                </div>
-                <div class="editor-label">
-                    @Html.LabelFor(model => model.City)：
-                </div>
-                <div class="editor-field">
-                    <select id="City" name="City"></select>
-                </div>
-                <div class="editor-label">
-                    @Html.LabelFor(model => model.Village)：
-                </div>
-                <div class="editor-field">
-                    <select id="Village" name="Village"></select>
-                </div>
-                <div class="editor-label">
-                    @Html.LabelFor(model => model.Address)：
-                </div>
-                <div class="editor-field">
-                    @Html.EditorFor(model => model.Address)
-                    @Html.ValidationMessageFor(model => model.Address)
-                </div>
-                <div class="editor-label">
-                    @Html.LabelFor(model => model.EmailAddress)：
-                </div>
-                <div class="editor-field">
-                    @Html.EditorFor(model => model.EmailAddress)
-                    @Html.ValidationMessageFor(model => model.EmailAddress)
-                </div><div class="editor-label">
-    @Html.LabelFor(model => model.State)：
-</div>
-<div class="editor-field">
-    @Html.RadioButtonListFor(model => model.State, Models.SysFieldModels.GetSysField("SysPerson", "State"), false)
-</div>
-                <br style="clear: both;" />
-                <div class="editor-label">
-                    @Html.LabelFor(model => model.Remark)：
-                </div>
-                <div class="textarea-box">
-                    @Html.TextAreaFor(model => model.Remark)
-                    @Html.ValidationMessageFor(model => model.Remark)
-                </div>
-               
             </div>
-        @Html.HiddenFor(model => model.HDpic)
-        <input type="hidden" id="fileUrl" value="HDpic" />
-        <script type="text/javascript" src="@Url.Content("~/Res/webuploader/js/webuploader.nolog.min.js")"></script>
-        <script type="text/javascript" src="@Url.Content("~/Scripts/UploadFile.js")"></script>
-</fieldset>
- @section HeadContent{
-<link rel="stylesheet" type="text/css" href="@Url.Content("~/Res/webuploader/css/webuploader.css")" />
- }
-    <script type="text/javascript">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <a onclick="xuanzhe('SysDepartmentId','/SysPerson/Index/');">
+                            @Html.LabelFor(model => model.SysDepartmentId, new { @class = "control-label col-md-4" })
+                        </a>
+                        <div class="col-md-8">
+                            <div id="checkSysDepartmentId">
+                            </div>
+                            @Html.HiddenFor(model => model.SysDepartmentId)
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Name, new { @class = "control-label col-md-4" })
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(model => model.Name, new { @class = "form-control", placeholder = Html.DisplayNameFor(model => model.Name) })
+                            @Html.ValidationMessageFor(model => model.Name)
+                            <span class="help-block">
 
-        $(function () {
-            
-            getCity("#City");
-            $("#Province").change(function () { getCity("#City"); });
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div style="float:right; width:379px;height:184px;">
+                    <div style="text-align:center;">
+                        <img id="showPic" src="~/Images/noPic.jpg" width="149" height="175" style="padding-bottom: 0px;" />
+                        <div id="uploader-demo">
+                            <!--用来存放item-->
+                            <div id="fileList" style="display:none;" class="uploader-list"></div>
+                            <div id="filePicker">上传头像</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.MyName, new { @class = "control-label col-md-4" })
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(model => model.MyName, new { @class = "form-control", placeholder = Html.DisplayNameFor(model => model.MyName) })
+                            @Html.ValidationMessageFor(model => model.MyName)
+                            <span class="help-block">
 
-            getVillage("#Village");
-            $("#City").change(function () { getVillage("#Village"); });
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Password, new { @class = "control-label col-md-4" })
+                        <div class="col-md-8">
+                            @Html.EditorFor(model => model.Password, new { @class = "form-control", placeholder = Html.DisplayNameFor(model => model.Password) })
+                            @Html.ValidationMessageFor(model => model.Password)
+                            <span class="help-block">
+
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.SurePassword, new { @class = "control-label col-md-4" })
+                        <div class="col-md-8">
+                            @Html.EditorFor(model => model.SurePassword, new { @class = "form-control", placeholder = Html.DisplayNameFor(model => model.Password) })
+                            @Html.ValidationMessageFor(model => model.SurePassword)
+                            <span class="help-block">
+
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.MobilePhoneNumber, new { @class = "control-label col-md-4" })
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(model => model.MobilePhoneNumber, new { @class = "form-control", placeholder = Html.DisplayNameFor(model => model.MobilePhoneNumber) })
+                            @Html.ValidationMessageFor(model => model.MobilePhoneNumber)
+                            <span class="help-block">
+
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Sex, new { @class = "control-label col-md-4" })
+                        <div class="col-md-8">
+                            @Html.DropDownListFor(model => model.Sex, Models.SysFieldModels.GetSysField("SysPerson", "Sex"))
+                            @Html.ValidationMessageFor(model => model.Sex)
+                            <span class="help-block">
+
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Position, new { @class = "control-label col-md-4" })
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(model => model.Position, new { @class = "form-control", placeholder = Html.DisplayNameFor(model => model.Position) })
+                            @Html.ValidationMessageFor(model => model.Position)
+                            <span class="help-block">
+
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.PhoneNumber, new { @class = "control-label col-md-4" })
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(model => model.PhoneNumber, new { @class = "form-control", placeholder = Html.DisplayNameFor(model => model.PhoneNumber) })
+                            @Html.ValidationMessageFor(model => model.PhoneNumber)
+                            <span class="help-block">
+
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Province, new { @class = "control-label col-md-4" })
+                        <div class="col-md-8">
+                            @Html.DropDownListFor(model => model.Province, Models.SysFieldModels.GetSysField("SysPerson", "Province"), "请选择")
+                            @Html.ValidationMessageFor(model => model.Province)
+                            <span class="help-block">
+
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.City, new { @class = "control-label col-md-4" })
+                        <div class="col-md-8">
+                            <select id="City" name="City"></select>
+                            <span class="help-block">
+
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Village, new { @class = "control-label col-md-4" })
+                        <div class="col-md-8">
+                            <select id="Village" name="Village"></select>
+                            <span class="help-block">
+
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Address, new { @class = "control-label col-md-4" })
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(model => model.Address, new { @class = "form-control", placeholder = Html.DisplayNameFor(model => model.Address) })
+                            @Html.ValidationMessageFor(model => model.Address)
+                            <span class="help-block">
+
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.EmailAddress, new { @class = "control-label col-md-4" })
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(model => model.EmailAddress, new { @class = "form-control", placeholder = Html.DisplayNameFor(model => model.EmailAddress) })
+                            @Html.ValidationMessageFor(model => model.EmailAddress)
+                            <span class="help-block">
+
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.State, new { @class = "control-label col-md-4" })
+                        <div class="col-md-8">
+                            @Html.RadioButtonListFor(model => model.State, Models.SysFieldModels.GetSysField("SysPerson", "State"), false)
+                            @Html.ValidationMessageFor(model => model.State)
+                            <span class="help-block">
+
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Remark, new { @class = "control-label col-md-4" })
+                        <div class="col-md-10">
+                            @Html.TextAreaFor(model => model.Remark, new { @class = "form-control", placeholder = Html.DisplayNameFor(model => model.Remark) })
+                            @Html.ValidationMessageFor(model => model.Remark)
+                            <span class="help-block">
+
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            @Html.HiddenFor(model => model.HDpic)
+            <input type="hidden" id="fileUrl" value="HDpic" />
+        </div>
+
+    </form>
+    <!-- END FORM-->
+</div>
 
 
+<script type="text/javascript" src="@Url.Content("~/Res/webuploader/js/webuploader.nolog.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/UploadFile.js")"></script>
+    @*@section HeadContent{
+        <link rel="stylesheet" type="text/css" href="@Url.Content("~/Res/webuploader/css/webuploader.css")" />
+    }*@
+
+
+<script type="text/javascript">
+
+    $(function () {
+
+        getCity("#City");
+        $("#Province").change(function () { getCity("#City"); });
+
+        getVillage("#Village");
+        $("#City").change(function () { getVillage("#Village"); });
+
+
+    });
+
+    function getCity(City) {
+        $(City).empty();
+        $("<option></option>")
+            .val("")
+            .text("请选择")
+            .appendTo($(City));
+        bindDropDownList(City, "#Province");
+        $(City).change();
+    }
+
+    function getVillage(Village) {
+        $(Village).empty();
+        $("<option></option>")
+            .val("")
+            .text("请选择")
+            .appendTo($(Village));
+        bindDropDownList(Village, "#City");
+        $(Village).change();
+    }
+
+    //选择
+    function xuanzhe(me, url) {
+        var hidden = document.getElementById(me); //获取隐藏的控件
+        if (hidden != null && hidden.value != null && hidden.value.length > 0) {
+            alert("此处为单选，请先删除已有的选项，再次尝试选择。");
+            return;
+        }
+        $.confirm({
+            title: '请选择数据',
+            columnClass: 'col-md-8 col-md-offset-2',
+            content: function () {
+                var self = this;
+                return $.ajax({
+                    url: '/SysPerson/IndexSef/',
+                    method: 'get'
+                }).done(function (response) {
+                    var reg = new RegExp("langbenData", "g");//g,表示全部替换。
+                    var data = (response).replace(reg, 'langbenData1');
+                    self.setContent(data); // 加入获取的数据
+                }).fail(function () {
+                    self.setContent('出错了，请关了重试。');
+                });
+            },
+            type: 'red',
+            icon: 'glyphicon glyphicon-question-sign',
+            buttons: {
+                ok: {
+                    text: '确认',
+                    btnClass: 'btn-primary',
+                    action: function () {
+                        var zhi = this.$content.find('#dataidbrk').val();
+                        var arr = zhi.split('&');
+                        var html = '<a class="red langbenDelete" href="#" onclick="deletes(this)">' + arr[0] + '&nbsp;&nbsp;<i class="ace-icon fa fa-trash-o bigger-130"></i></a>';
+                        $("#checkSysDepartmentId").append(html);
+                        $("#SysDepartmentId").val(arr[1]);
+                    }
+                },
+                cancel: {
+                    text: '取消',
+                    btnClass: 'btn-primary',
+                    action: function () {
+                        // button action.
+                    }
+                },
+            }
         });
-        
-        function getCity(City) {
-            $(City).empty();
-            $("<option></option>")
-                    .val("")
-                    .text("请选择")
-                    .appendTo($(City));
-            bindDropDownList(City, "#Province");
-            $(City).change();
-        }
-
-        function getVillage(Village) {
-            $(Village).empty();
-            $("<option></option>")
-                    .val("")
-                    .text("请选择")
-                    .appendTo($(Village));
-            bindDropDownList(Village, "#City");
-            $(Village).change();
-        }
-    </script>
+    }
+    //清除选择
+    function deletes(e) {
+        e.parentNode.removeChild(e); //删除
+        $("#SysDepartmentId").val("");
+    }
+</script>
 
 

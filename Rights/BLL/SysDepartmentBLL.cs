@@ -365,8 +365,8 @@ namespace Langben.BLL
             return false;
         }
         public List<SysDepartment> GetAll()
-        {            
-            return repository.GetAll(db).ToList();          
+        {
+            return repository.GetAll(db).ToList();
         }     
         
         /// <summary>

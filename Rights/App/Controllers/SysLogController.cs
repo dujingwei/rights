@@ -57,7 +57,7 @@ namespace Langben.App.Controllers
                 page = (param.Start / param.Length) + 1;
             }
       
-            List<SysLog> queryData = m_BLL.GetByParam(null, page, param.Length, param.DescOrAsc, param.SortOrder, "", ref total);
+            List<SysLog> queryData = m_BLL.GetByParam(null, page, param.Length, param.DescOrAsc, param.SortOrder, param.Search.Value, ref total);
             DTResult<SysLog> result = new DTResult<SysLog>
             {
                 draw = param.Draw,
@@ -66,30 +66,7 @@ namespace Langben.App.Controllers
 
             };
             return Json(result);
-
-
-            //       int total = 0;
-            //       List<SysLog> queryData = m_BLL.GetByParam(id, page, rows, order, sort, search, ref total);
-            //       return Json(new datagrid
-            //       {
-            //           total = total,
-            //           rows = queryData.Select(s => new
-            //           {
-            //               Id = s.Id
-            //,PersonId = s.PersonId
-            //,Message = s.Message
-            //,Result = s.Result
-            //,MenuId = s.MenuId
-            //,Ip = s.Ip
-            //,Remark = s.Remark
-            //,State = s.State
-            //,CreateTime = s.CreateTime
-            //,CreatePerson = s.CreatePerson
-
-            //           }
-
-            //               )
-            //       });
+            
         }
         /// <summary>
         ///  导出Excle /*在6.0版本中 新增*/

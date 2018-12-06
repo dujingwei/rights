@@ -1,200 +1,303 @@
 ﻿
-@model Langben.DAL.SysException 
-@{ Layout = "~/Views/Shared/Index.cshtml"; }
-@using Common 
-@using Models
+@model Langben.DAL.SysException
+
+<div id="divQuery" class="form-horizontal">
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                @Html.LabelFor(model => model.CreateTime, new { @class = "control-label col-md-4" })
+                <div class="col-md-7 demo">
+                    <input type="text" name="CreateTime" id="CreateTime" class="form-control input-large" placeholder="请选择起始时间" readonly size="30">
+
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-md-4">
+            <div class="form-group">
+                @Html.LabelFor(model => model.Message, new { @class = "control-label col-md-4" })
+                <div class="col-md-8">
+                    <input type="text" class="form-control input-large" id="Message" />
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <button id='langbenQuery' type='submit' class='btn btn-primary '>查 询</button>
+        </div>
+    </div>
+</div>
+<input type='hidden' id='search' name='search' />
+
+<table id="langbenData" class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th data-orderable='false'>@Html.DisplayNameFor(model => model.Message)</th>
+
+            <th data-orderable='false'>@Html.DisplayNameFor(model => model.CreateTime)</th>
+            <th data-orderable='false'>@Html.DisplayNameFor(model => model.CreatePerson)</th>
+            <th data-visible='false'>@Html.DisplayNameFor(model => model.Id)</th>
+            @*<th data-orderable="false">
+                    操作
+                </th>*@
+        </tr>
+    </thead>
+    <tbody></tbody>
+    <tfoot></tfoot>
+</table>
+<style type="text/css">
+    .demo {
+        position: relative;
+    }
+
+    .input-mini {
+        width: 240px !important;
+    }
+
+    .demo i {
+        position: absolute;
+        bottom: 10px;
+        right: 24px;
+        top: auto;
+        cursor: pointer;
+    }
+</style>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $("#CreateTime").daterangepicker({
+            timePicker: false, //显示时间
+            timePicker24Hour: true, //时间制
+            timePickerSeconds: true, //时间显示到秒
+
+            "opens": "center",
+            ranges: {
+                '今天': [moment(), moment()],
+
+                '本月': [moment().startOf('month'), moment().endOf('month')],
+                '上月': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            },
+            showWeekNumbers: true,
+            alwaysShowCalendars: true,//显示时间列表
+            //showDropdowns: true,//年月加下拉框
+            locale: {
+                //format: "YYYY-MM-DD HH:mm:ss", //设置显示格式
+                format: "YYYY-MM-DD", //设置显示格式
+                applyLabel: '确定', //确定按钮文本
+                cancelLabel: '清空', //取消按钮文本
+                customRangeLabel: '自定义',
+                daysOfWeek: ['日', '一', '二', '三', '四', '五', '六'],
+                monthNames: ['一月', '二月', '三月', '四月', '五月', '六月',
+                    '七月', '八月', '九月', '十月', '十一月', '十二月'
+                ],
+                separator: '~',
+                firstDay: 1
+            },
+        }, function (start, end, label) {
+
+        });
+        $('#CreateTime').val('');
+        //清空日期
+        $('#CreateTime').on('cancel.daterangepicker', function (ev, picker) {
+            $('#CreateTime').val('');
+        });
+    });
+
+</script>
 <script type="text/javascript" language="javascript">
     $(function () {
 
-        $('#flexigridData').datagrid({
-            title: '异常处理', //列表的标题
-            iconCls: 'icon-site',
-            width: 'auto',
-            height: 'auto',
-            //nowrap: false,
-            striped: true,
-            collapsible: true,
-            url: '../SysException/GetData', //获取数据的url
-            sortName: 'Id',
-            sortOrder: 'desc',
-            idField: 'Id',
-
-            columns: [[
-
-
-           {
-                     field: 'Message', title: '@Html.DisplayNameFor(model => model.Message)', width: 500,
-                     formatter: function (value, row, index) {
-                         var html = "<a href='/SysException/Details/" + row.Id + "'>" + value + "</a>";
-                         return html;
-                     }
-                 }
+        var table = $('#langbenData').DataTable({
+            ajax: {
+                type: "POST",
+                url: '/SysException/GetData',
+                contentType: 'application/json; charset=utf-8',
+                data: function (data) {
+                    data.search.value = $('#search').val();
+                    return data = JSON.stringify(data);
+                }
+            },
+            order: [[1, "desc"]],
+            columns: [
+                { data: 'Message' },
                
-                , {
-                    field: 'CreateTime', title: '@Html.DisplayNameFor(model => model.CreateTime)', width: 129
-                , formatter: function (value, rec) {
-                    if (value) {
-                        return dateConvert(value);
+                {
+                    data: 'CreateTime', render: function (data, type, full, meta) {
+                        return dateConvert(data);
                     }
+                },
+                { data: 'CreatePerson' },
+                { data: 'Id' },
+                //{ data: "操作" }
+            ],
+            columnDefs: [
+                {
+                    targets: 0,//第一列
+                    width:"50%",
+                    render: function (data, type, full, meta) {
+
+                        data = (data != null) ? data : '';
+
+                        return '<a href="#" onclick="langbenView('
+                            + "'" + full.Id + "'"
+                            + ')">' + data + '</a>';
+                    }
+                },
+                
+                //{
+                //    targets: -1,//-1表示最后一列
+                //    width: "70px",//固定宽度
+                //    render: function (data, type, full, meta) {
+
+                //        return '<div class="hidden-sm hidden-xs action-buttons"><a class="green" href="#" onclick="langbenModify('
+                //            + "'" + full.Id + "'"
+                //            + ')"><i class="ace-icon fa fa-pencil bigger-130"></i></a><a class="red langbenDelete" href="#" id="'
+                //            + full.Id
+                //            + '"><i class="ace-icon fa fa-trash-o bigger-130"></i></a></div>' +
+                //            '';
+                //    }
+                //},
+                {
+                    targets: [1],
+                    width: "25%",
+                    orderable: true
                 }
+            ]
+
+        });
+
+        //查询按钮
+        $("#langbenQuery").click(function () {
+            //将查询条件按照分隔符拼接成字符串
+            var search = "";
+            $('#divQuery').find(":text,:selected,select,textarea,:hidden,:checked,:password").each(function () {
+                if (this.id == "CreateTime") {
+                    var arrt = this.value.split('~');
+                    search += "CreateTimeStart_Time" + "&" + arrt[0] + "^" + "CreateTimeEnd_Time" + "&" + arrt[1] + "^";
                 }
-                , { field: 'CreatePerson', title: '@Html.DisplayNameFor(model => model.CreatePerson)', width: 129 }
-            ]],
-            pagination: true,
-            rownumbers: true
-
-        });
-
-        var parent = window.dialogArguments; //获取父页面
-        if (parent == "undefined" || parent == null) {
-            //    不是在iframe中打开的
-        } else {
-            //隐藏所有的按钮和分隔符
-            $(".l-btn.l-btn-plain").hide();
-            $(".datagrid-btn-separator").hide();
-            //添加选择按钮
-            $('#flexigridData').datagrid("addToolbarItem", [{ "text": "选择", "iconCls": "icon-ok", handler: function () { flexiSelect(); } }]);
-        }
-    });
-
-    //“查询”按钮，弹出查询框
-    function flexiQuery() {
-
-        //将查询条件按照分隔符拼接成字符串
-        var search = "";
-        $('#divQuery').find(":text,:selected,select,textarea,:hidden,:checked,:password").each(function () {
-            if (this.id)
-                search = search + this.id + "&" + this.value + "^";
-            else
-                search = search + this.name + "&" + this.value + "^";
-        });
-        //执行查询
-        $('#flexigridData').datagrid('load', { search: search });
-    };
-    //“导出”按钮     在6.0版本中修改
-    function flexiExport() {
-
-        //将查询条件按照分隔符拼接成字符串
-        var search = "";
-        $('#divQuery').find(":text,:selected,select,textarea,:hidden,:checked,:password").each(function () {
-            search = search + this.id + "&" + this.value + "^";
-        });
-
-        var p = $('#flexigridData').datagrid('options').columns[0];
-        var field = [];//所有的列名
-        var title = [];//所有的标题名称
-        $(p).each(function () {
-            field.push(this.field);
-            title.push(this.title);
-        });
-
-        $.post("../SysException/Export",
-            {
-                title: title.join(","),
-                field: field.join(","),
-                sortName: $('#flexigridData').datagrid('options').sortName,
-                sortOrder: $('#flexigridData').datagrid('options').sortOrder,
-                search: search
-            }, function (res) {
-                window.location.href = res;
-
+                else if (this.id)
+                    search += this.id + "&" + this.value + "^";
+                else
+                    search += this.name + "&" + this.value + "^";
             });
-    };
-    //“选择”按钮，在其他（与此页面有关联）的页面中，此页面以弹出框的形式出现，选择页面中的数据
-    function flexiSelect() {
+            debugger
+            $('#search').val(search)
+            //重新加载DataTable
+            table.ajax.reload();
 
-        var rows = $('#flexigridData').datagrid('getSelections');
-        if (rows.length == 0) {
-            $.messager.alert('操作提示', '请选择数据!', 'warning');
-            return false;
-        }
+        });
 
-        var arr = [];
-        for (var i = 0; i < rows.length; i++) {
-            arr.push(rows[i].Id);
-        }
-        arr.push("^");
-        for (var i = 0; i < rows.length; i++) {
-            arr.push(rows[i].LeiXing);
-        }
-        //主键列和显示列之间用 ^ 分割   每一项用 , 分割
-        if (arr.length > 0) {//一条数据和多于一条
-            returnParent(arr.join("&")); //每一项用 & 分割
-        }
-    }
-    function Detail(id) {
-        window.location.href = "../SysException/Details/" + id;
-    }
-    //导航到查看详细的按钮
-    function getView() {
+        // 数据删除
+        $('#langbenData tbody').on('click', 'a.langbenDelete', function () {
 
-        var arr = $('#flexigridData').datagrid('getSelections');
+            //  var data = tables.row($(this).parents('tr')).data(); //释放注释你会有惊喜
+            var id = $(this).attr("id");
 
-        if (arr.length == 1) {
-            window.location.href = "../SysException/Details/" + arr[0].Id;
+            $.confirm({
+                title: '提示',
+                content: "确认删除它吗？",
+                buttons: {
+                    ok: {
+                        text: "是的",
+                        btnClass: 'btn-primary',
+                        keys: ['enter'],
+                        action: function () {
 
-        } else {
-            $.messager.alert('操作提示', '请选择一条数据!', 'warning');
-        }
-        return false;
-    }
-    //导航到创建的按钮
-    function flexiCreate() {
+                            $.post("/SysLog/Delete", { query: id }, function (res) {
 
-        window.location.href = "../SysException/Create";
-        return false;
-    }
-    //导航到修改的按钮
-    function flexiModify() {
+                                if (res == "OK") {//删除成功
 
-        var arr = $('#flexigridData').datagrid('getSelections');
+                                    $.alert({
+                                        title: '提示',
+                                        content: '删除成功!',
+                                        autoClose: 'cancelAction|5000',
+                                        buttons: {
+                                            cancelAction: {
+                                                text: '知道了',
+                                                action: function () {
+                                                }
+                                            },
+                                        }
+                                    });
 
-        if (arr.length == 1) {
-            window.location.href = "../SysException/Edit/" + arr[0].Id;
+                                    //重新加载DataTable
+                                    table.ajax.reload();
 
-        } else {
-            $.messager.alert('操作提示', '请选择一条数据!', 'warning');
-        }
-        return false;
+                                }
+                                else {//删除失败
 
-    };
-    //删除的按钮
-    function flexiDelete() {
+                                    $.alert({
+                                        title: '提示',
+                                        content: res,
+                                        buttons: {
+                                            cancelAction: {
+                                                text: '知道了',
+                                                action: function () {
+                                                }
+                                            },
+                                        }
+                                    });
 
-        var rows = $('#flexigridData').datagrid('getSelections');
-        if (rows.length == 0) {
-            $.messager.alert('操作提示', '请选择数据!', 'warning');
-            return false;
-        }
-
-        var arr = [];
-        for (var i = 0; i < rows.length; i++) {
-            arr.push(rows[i].Id);
-        }
-
-        $.messager.confirm('操作提示', "确认删除这 " + arr.length + " 项吗？", function (r) {
-            if (r) {
-                $.post("../SysException/Delete", { query: arr.join(",") }, function (res) {
-                    if (res == "OK") {
-                        //移除删除的数据
-
-                        $.messager.alert('操作提示', '删除成功!', 'info');
-                        $("#flexigridData").datagrid("reload");
-                        $("#flexigridData").datagrid("clearSelections");
-                    }
-                    else {
-                        if (res == "") {
-                            $.messager.alert('操作提示', '删除失败!请查看该数据与其他模块下的信息的关联，或联系管理员。', 'info');
+                                }
+                            });
                         }
-                        else {
-                            $.messager.alert('操作提示', res, 'info');
+                    },
+                    cancel: {
+                        text: "稍等等",
+                        btnClass: 'btn',
+                        action: function () {
                         }
                     }
+                }
+            });
+        });
+
+    });
+    //创建
+    function langbenCreate() {
+
+        $("#contentBody").load("/SysLog/Create", function () {
+
+        });
+
+    }
+    //修改
+    function langbenModify(id) {
+
+        var url = "../SysLog/Edit/" + id;
+        $("#contentBody").load(url, function () {
+
+        });
+
+    };
+    //查看详细
+    function langbenView(id) {
+
+        $.dialog({
+            title: '',
+            columnClass: 'col-md-8 col-md-offset-2',
+            backgroundDismiss: true,
+            content: function () {
+                var self = this;
+                return $.ajax({
+                    url: '/SysException/Details/' + id,
+                    method: 'get'
+                }).done(function (response) {
+
+                    self.setContent(response); // 加入获取的数据
+
+                }).fail(function () {
+
+                    self.setContent('出错了，请关了重试。');
+
                 });
             }
+
         });
 
     };
 
 </script>
+
 

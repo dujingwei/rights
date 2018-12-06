@@ -1,15 +1,12 @@
-﻿using System;
+﻿using Common;
+using Langben.App.Models;
+using Langben.BLL;
+using Langben.DAL;
+using Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
-using System.Text;
-using System.EnterpriseServices;
-using System.Configuration;
-using Models;
-using Common;
-using Langben.DAL;
-using Langben.BLL;
-using Langben.App.Models;
 
 namespace Langben.App.Controllers
 {
@@ -47,77 +44,80 @@ namespace Langben.App.Controllers
         /// <param name="sort">升序asc（默认）还是降序desc</param>
         /// <param name="search">查询条件</param>
         /// <returns></returns>
-        [HttpPost]
-        public JsonResult GetData(string id, int page, int rows, string order, string sort, string search)
+        public JsonResult GetData(DTParameters param)
         {
-
             int total = 0;
-            List<SysPerson> queryData = m_BLL.GetByParam(id, page, rows, order, sort, search, ref total);
-            return Json(new datagrid
+            int page = 1;
+            if (param.Start != 0)
             {
-                total = total,
-                rows = queryData.Select(s => new
+                page = (param.Start / param.Length) + 1;
+            }
+            List<SysPerson> queryData = m_BLL.GetByParam(null, page, param.Length, param.DescOrAsc, param.SortOrder, param.Search.Value, ref total);
+            var result = new DTResult()
+            {
+                draw = param.Draw,
+                recordsFiltered = total,
+                data = queryData.Select(s => new
                 {
                     Id = s.Id
-                    ,
+                         ,
                     Name = s.Name
-                    ,
+                         ,
                     MyName = s.MyName
-                    ,
+                         ,
                     Password = s.Password
-                    ,
+                         ,
                     SurePassword = s.SurePassword
-                    ,
+                         ,
                     Sex = s.Sex
-                    ,
+                         ,
                     SysDepartmentId = s.SysDepartmentIdOld
-                    ,
+                         ,
                     Position = s.Position
-                    ,
+                         ,
                     MobilePhoneNumber = s.MobilePhoneNumber
-                    ,
+                         ,
                     PhoneNumber = s.PhoneNumber
-                    ,
+                         ,
                     Province = s.Province
-                    ,
+                         ,
                     City = s.City
-                    ,
+                         ,
                     Village = s.Village
-                    ,
+                         ,
                     Address = s.Address
-                    ,
+                         ,
                     EmailAddress = s.EmailAddress
-                    ,
+                         ,
                     Remark = s.Remark
-                    ,
+                         ,
                     State = s.State
-                    ,
+                         ,
                     CreateTime = s.CreateTime
-                    ,
+                         ,
                     CreatePerson = s.CreatePerson
-                    ,
+                         ,
                     UpdateTime = s.UpdateTime
-                    ,
+                         ,
                     LogonNum = s.LogonNum
-                    ,
+                         ,
                     LogonTime = s.LogonTime
-                    ,
+                         ,
                     LogonIP = s.LogonIP
-                    ,
+                         ,
                     LastLogonTime = s.LastLogonTime
-                    ,
+                         ,
                     LastLogonIP = s.LastLogonIP
-                    ,
+                         ,
                     PageStyle = s.PageStyle
-                    ,
+                         ,
                     UpdatePerson = s.UpdatePerson
-                    ,
+                         ,
                     Version = s.Version
 
-                }
-
-                    )
-            });
+                })
+            };
+            return Json(result);
         }
         /// <summary>
         ///  导出Excle /*在6.0版本中 新增*/
@@ -156,6 +156,7 @@ namespace Langben.App.Controllers
             SysPerson p = new SysPerson();
             p.PageStyle = "default";
             return View(p);
+            // return View();
         }
         /// <summary>
         /// 创建
@@ -163,7 +164,7 @@ namespace Langben.App.Controllers
         /// <param name="entity"></param>
         /// <returns></returns>
         [HttpPost]
-        [SupportFilter]
+
         public ActionResult Create(SysPerson entity)
         {
             if (entity != null && ModelState.IsValid)
@@ -222,7 +223,6 @@ namespace Langben.App.Controllers
         /// <param name="collection">客户端传回的集合</param>
         /// <returns></returns>
         [HttpPost]
-        [SupportFilter]
         public ActionResult Edit(string id, SysPerson entity)
         {
             if (entity != null && ModelState.IsValid)

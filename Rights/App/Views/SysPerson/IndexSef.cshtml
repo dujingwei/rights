@@ -1,0 +1,80 @@
+﻿@model Langben.DAL.SysPerson
+<table id="langbenData" class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th data-orderable='false'>@Html.DisplayNameFor(model => model.Name)</th>
+            <th data-orderable='false'>@Html.DisplayNameFor(model => model.MyName)</th>
+            <th data-orderable='false'>@Html.DisplayNameFor(model => model.MobilePhoneNumber)</th>
+            <th data-orderable='false'>@Html.DisplayNameFor(model => model.PhoneNumber)</th>
+            <th data-orderable='false'>@Html.DisplayNameFor(model => model.EmailAddress)</th>
+            <th data-orderable='false'>@Html.DisplayNameFor(model => model.State)</th>
+            <th data-orderable='false'>@Html.DisplayNameFor(model => model.CreateTime)</th>
+            <th data-visible='false'>@Html.DisplayNameFor(model => model.Id)</th>
+
+        </tr>
+    </thead>
+    <tbody></tbody>
+    <tfoot></tfoot>
+</table>
+<input type='hidden' id='dataidbrk'/>
+<style type="text/css">
+    tbody tr.odd.selected, tbody tr.selected {
+        background-color: #abb9d3;
+    }
+</style>
+<script type="text/javascript" language="javascript">
+    $(document).ready(function () {
+        //数据加载
+        var table = $('#langbenData').DataTable({
+            ajax: {
+                type: "POST",
+                url: '/SysPerson/GetData',
+                contentType: 'application/json; charset=utf-8',
+                data: function (data) {
+                    data.search.value = $('#search').val();
+                    return data = JSON.stringify(data);
+
+                }
+            },
+            order: [[6, "desc"]],
+            columns: [
+                { data: 'Name' },
+                { data: 'MyName' },
+                { data: 'MobilePhoneNumber' },
+                { data: 'PhoneNumber' },
+                { data: 'EmailAddress' },
+                { data: 'State' },
+                {
+                    data: 'CreateTime', render: function (data, type, full, meta) {
+                        return dateConvert(data);
+                    }
+                },
+                { data: 'Id',"visible": false }
+
+            ],
+            columnDefs: [
+                {
+                    targets: [6],
+                    orderable: true
+                }
+            ]
+        });
+
+
+        //选择单行
+        $('#langbenData tbody').on('click', 'tr', function () {
+            if ($(this).hasClass('selected')) {
+                $(this).removeClass('selected');
+            }
+            else {
+                table.$('tr.selected').removeClass('selected');
+                $(this).addClass('selected');              
+                var id = table.row('.selected').data().Id;
+                var MyName = table.row('.selected').data().MyName;
+                $("#dataidbrk").val(MyName + "&" + id);
+            }
+        });
+
+
+    });
+</script>

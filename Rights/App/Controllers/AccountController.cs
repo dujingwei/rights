@@ -25,7 +25,7 @@ namespace Langben.App.Controllers
         public ActionResult Index()
         {
          
-            return View(); //开发的时候，只需要注释此行代码
+          //  return View(); //开发的时候，只需要注释此行代码
 #if DEBUG
             //Debug 测试时使用
             AccountBLL accountBLL = new BLL.AccountBLL();
@@ -43,7 +43,7 @@ namespace Langben.App.Controllers
                 account.Theme = person.PageStyle;
                 //Session["account"] = account;
                 Utils.WriteCookie("account", account, 7);
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index2", "Home");
             }
 
             return RedirectToAction("Index", "Home");
@@ -87,7 +87,7 @@ namespace Langben.App.Controllers
                     Utils.WriteCookie("account", account, 7);
                     //Session["account"] = account;
 
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index2", "Home");
                 }
             }
 

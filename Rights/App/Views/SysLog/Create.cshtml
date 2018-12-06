@@ -15,17 +15,52 @@
 </div>
 <div class="portlet-body form">
     <!-- BEGIN FORM-->
+    <script type="text/javascript">
+var windowObjectReference = null; // global variable
+
+function openFFPromotionPopup() {
+  if(windowObjectReference == null || windowObjectReference.closed)
+  /* if the pointer to the window object in memory does not exist
+     or if such pointer exists but the window was closed */
+
+  {
+    windowObjectReference = window.open("http://www.spreadfirefox.com/",
+   "PromoteFirefoxWindowName", "resizable,scrollbars,status");
+    /* then create it. The new window will be created and
+       will be brought on top of any other window. */
+  }
+  else
+  {
+    windowObjectReference.focus();
+    /* else the window reference must exist and the window
+       is not closed; therefore, we can bring it back on top of any other
+       window with the focus() method. There would be no need to re-create
+       the window or to reload the referenced resource. */
+  };
+}
+    </script>
+     
+    (...)
+
+    <p>
+        <a href="http://www.spreadfirefox.com/"
+           target="PromoteFirefoxWindowName"
+           onclick="openFFPromotionPopup(); return false;"
+           title="This link will create a new window or will re-use an already opened one">Promote Firefox adoption</a>
+    </p>
+
     <form action="/SysLog/Create" class="form-horizontal">
         <div class="form-body">
-
+             
             <div class="row">
 
                 <div class="col-md-6">
                     <div class="form-group">
-                        @Html.LabelFor(model => model.PersonId, new { @class = "control-label col-md-4" })
+                        <a  onclick="showModalOnly('SysDepartmentId','../../SysDepartment');">
+                            @Html.LabelFor(model => model.Result, new { @class = "control-label col-md-4" })
+                        </a>
                         <div class="col-md-8">
-                            @Html.TextBoxFor(model => model.PersonId, new { @class = "form-control", placeholder = Html.DisplayNameFor(model => model.PersonId) })
-                            @Html.ValidationMessageFor(model => model.PersonId)
+                            
                             <span class="help-block">
 
                             </span>

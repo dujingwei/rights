@@ -26,10 +26,10 @@ namespace Langben.App.Controllers
         [SupportFilter]
         public ActionResult Index()
         {
-        
+
             return View();
         }
-         /// <summary>
+        /// <summary>
         /// 列表
         /// </summary>
         /// <returns></returns>
@@ -47,30 +47,23 @@ namespace Langben.App.Controllers
         /// <param name="sort">升序asc（默认）还是降序desc</param>
         /// <param name="search">查询条件</param>
         /// <returns></returns>
-        [HttpPost]
-        public JsonResult GetData(string id, int page, int rows, string order, string sort, string search)
+        public JsonResult GetData(DTParameters param)
         {
 
             int total = 0;
-            List<SysException> queryData = m_BLL.GetByParam(id, page, rows, order, sort, search, ref total);
-            return Json(new datagrid
+            int page = 1;
+            if (param.Start != 0)
             {
-                total = total,
-                rows = queryData.Select(s => new
-                {
-                    Id = s.Id
-					,LeiXing = s.LeiXing
-					,Message = s.Message
-					,Result = s.Result
-					,Remark = s.Remark
-					,State = s.State
-					,CreateTime = s.CreateTime
-					,CreatePerson = s.CreatePerson
-					
-                }
-
-                    )
-            });
+                page = (param.Start / param.Length) + 1;
+            }
+            List<SysException> queryData = m_BLL.GetByParam(null, page, param.Length, param.DescOrAsc, param.SortOrder, param.Search.Value, ref total);
+            DTResult<SysException> result = new DTResult<SysException>
+            {
+                draw = param.Draw,
+                data = queryData,
+                recordsFiltered = total
+            };
+            return Json(result);
         }
         /// <summary>
         ///  导出Excle /*在6.0版本中 新增*/
@@ -83,30 +76,30 @@ namespace Langben.App.Controllers
             string[] titles = title.Split(',');//如果确定显示的名称，可以直接定义
             string[] fields = field.Split(',');
             List<SysException> queryData = m_BLL.GetByParam(id, sortOrder, sortName, search);
-             
-            return Content(WriteExcle(titles, fields, queryData.ToArray()));  
+
+            return Content(WriteExcle(titles, fields, queryData.ToArray()));
         }
         /// <summary>
         /// 查看详细
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [SupportFilter]  
+        [SupportFilter]
         public ActionResult Details(string id)
         {
             SysException item = m_BLL.GetById(id);
             return View(item);
 
         }
- 
+
         /// <summary>
         /// 首次创建
         /// </summary>
         /// <returns></returns>
         [SupportFilter]
         public ActionResult Create(string id)
-        { 
-            
+        {
+
             return View();
         }
         /// <summary>
@@ -117,23 +110,23 @@ namespace Langben.App.Controllers
         [HttpPost]
         [SupportFilter]
         public ActionResult Create(SysException entity)
-        {           
+        {
             if (entity != null && ModelState.IsValid)
             {
                 string currentPerson = GetCurrentPerson();
                 entity.CreateTime = DateTime.Now;
                 entity.CreatePerson = currentPerson;
-              
-                entity.Id = Result.GetNewId();   
+
+                entity.Id = Result.GetNewId();
                 string returnValue = string.Empty;
                 if (m_BLL.Create(ref validationErrors, entity))
                 {
-                    LogClassModels.WriteServiceLog(Suggestion.InsertSucceed  + "，异常处理的信息的Id为" + entity.Id,"异常处理"
+                    LogClassModels.WriteServiceLog(Suggestion.InsertSucceed + "，异常处理的信息的Id为" + entity.Id, "异常处理"
                         );//写入日志 
                     return Json(Suggestion.InsertSucceed);
                 }
                 else
-                { 
+                {
                     if (validationErrors != null && validationErrors.Count > 0)
                     {
                         validationErrors.All(a =>
@@ -142,9 +135,9 @@ namespace Langben.App.Controllers
                             return true;
                         });
                     }
-                    LogClassModels.WriteServiceLog(Suggestion.InsertFail + "，异常处理的信息，" + returnValue,"异常处理"
+                    LogClassModels.WriteServiceLog(Suggestion.InsertFail + "，异常处理的信息，" + returnValue, "异常处理"
                         );//写入日志                      
-                    return Json(Suggestion.InsertFail  + returnValue); //提示插入失败
+                    return Json(Suggestion.InsertFail + returnValue); //提示插入失败
                 }
             }
 
@@ -155,7 +148,7 @@ namespace Langben.App.Controllers
         /// </summary>
         /// <param name="id">主键</param>
         /// <returns></returns> 
-        [SupportFilter] 
+        [SupportFilter]
         public ActionResult Edit(string id)
         {
             SysException item = m_BLL.GetById(id);
@@ -173,20 +166,20 @@ namespace Langben.App.Controllers
         {
             if (entity != null && ModelState.IsValid)
             {   //数据校验
-            
-                string currentPerson = GetCurrentPerson();                 
+
+                string currentPerson = GetCurrentPerson();
                 //entity.UpdateTime = DateTime.Now;
                 //entity.UpdatePerson = currentPerson;
-                           
-                string returnValue = string.Empty;   
+
+                string returnValue = string.Empty;
                 if (m_BLL.Edit(ref validationErrors, entity))
                 {
-                    LogClassModels.WriteServiceLog(Suggestion.UpdateSucceed + "，异常处理信息的Id为" + id,"异常处理"
+                    LogClassModels.WriteServiceLog(Suggestion.UpdateSucceed + "，异常处理信息的Id为" + id, "异常处理"
                         );//写入日志                           
                     return Json(Suggestion.UpdateSucceed); //提示更新成功 
                 }
                 else
-                { 
+                {
                     if (validationErrors != null && validationErrors.Count > 0)
                     {
                         validationErrors.All(a =>
@@ -197,11 +190,11 @@ namespace Langben.App.Controllers
                     }
                     LogClassModels.WriteServiceLog(Suggestion.UpdateFail + "，异常处理信息的Id为" + id + "," + returnValue, "异常处理"
                         );//写入日志                           
-                    return Json(Suggestion.UpdateFail  + returnValue); //提示更新失败
+                    return Json(Suggestion.UpdateFail + returnValue); //提示更新失败
                 }
             }
             return Json(Suggestion.UpdateFail + "请核对输入的数据的格式"); //提示输入的数据的格式不对               
-          
+
         }
         /// <summary>
         /// 删除
@@ -214,7 +207,7 @@ namespace Langben.App.Controllers
             string returnValue = string.Empty;
             string[] deleteId = collection["query"].GetString().Split(',');
             if (deleteId != null && deleteId.Length > 0)
-            { 
+            {
                 if (m_BLL.DeleteCollection(ref validationErrors, deleteId))
                 {
                     LogClassModels.WriteServiceLog(Suggestion.DeleteSucceed + "，信息的Id为" + string.Join(",", deleteId), "消息"
@@ -231,13 +224,13 @@ namespace Langben.App.Controllers
                             return true;
                         });
                     }
-                    LogClassModels.WriteServiceLog(Suggestion.DeleteFail + "，信息的Id为" + string.Join(",", deleteId)+ "," + returnValue, "消息"
+                    LogClassModels.WriteServiceLog(Suggestion.DeleteFail + "，信息的Id为" + string.Join(",", deleteId) + "," + returnValue, "消息"
                         );//删除失败，写入日志
                 }
             }
             return Json(returnValue);
         }
-     
+
         IBLL.ISysExceptionBLL m_BLL;
 
         ValidationErrors validationErrors = new ValidationErrors();
@@ -249,7 +242,7 @@ namespace Langben.App.Controllers
         {
             m_BLL = bll;
         }
-        
+
     }
 }
 
